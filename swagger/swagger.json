@@ -1,0 +1,634 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NextiFilm API",
+    "version": "1.0.0",
+    "description": "API para gestionar el catálogo de películas del videoclub"
+  },
+  "tags": [
+    {
+      "name": "Films",
+      "description": "Everything about your Films"
+    },
+    {
+      "name": "Auth",
+      "description": "EndPoints for Authentication"
+    }
+  ],
+  "paths": {
+    "/getFilms": {
+      "get": {
+        "tags": ["Films"],
+        "summary": "Get all Films",
+        "description": "Return all the films of the videoclub",
+        "responses": {
+          "200": {
+            "description": "Films List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pelicula"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getFilm/{idFilm}": {
+      "get": {
+        "tags": ["Films"],
+        "summary": "Get a Film",
+        "description": "Return a concrete film of the videoclub",
+        "parameters": [
+          {
+            "name": "idFilm",
+            "in": "path",
+            "description": "ID of film to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Film Data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pelicula"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/updateFilm/{idFilm}": {
+      "put": {
+        "tags": ["Films"],
+        "summary": "Update a Film",
+        "description": "Return the Film updated",
+        "parameters": [
+          {
+            "name": "idFilm",
+            "in": "path",
+            "description": "ID of film to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeliculaDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Uptaded Film",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pelicula"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newFilm": {
+      "post": {
+        "tags": ["Films"],
+        "summary": "Create a new Film",
+        "description": "Return the new Film",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeliculaDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New Film",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pelicula"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/deleteFilm/{idFilm}": {
+      "delete": {
+        "tags": ["Films"],
+        "summary": "Delete a Film",
+        "description": "Return a 200 status if deletion succeded",
+        "parameters": [
+          {
+            "name": "idFilm",
+            "in": "path",
+            "description": "ID of film to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Film Deleted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "description": "EndPoint for login into app",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register",
+        "description": "EndPoint for register in the app",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/checkStatus": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Check Token",
+        "description": "EndPoint for checking a token. It checks if is a valid token and if it is still on date. If OK, it renews the expiration date of the token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Check Succeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pelicula": {
+        "type": "object",
+        "properties": {
+          "id_pelicula": {
+            "type": "integer",
+            "example": 1
+          },
+          "titulo": {
+            "type": "string",
+            "example": "El Padrino"
+          },
+          "genero": {
+            "type": "string",
+            "example": "Drama"
+          },
+          "estreno": {
+            "type": "integer",
+            "example": 1973
+          },
+          "director": {
+            "type": "string",
+            "example": "Russo Brothers"
+          },
+          "duracion": {
+            "type": "integer",
+            "example": 120
+          },
+          "stock": {
+            "type": "integer",
+            "example": 12
+          },
+          "precio_alquiler": {
+            "type": "integer",
+            "example": 20
+          },
+          "descripcion": {
+            "type": "string",
+            "example": "Esta película ..."
+          }
+        }
+      },
+      "PeliculaDTO": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "example": "El Padrino"
+          },
+          "genero": {
+            "type": "string",
+            "example": "Drama"
+          },
+          "estreno": {
+            "type": "integer",
+            "example": 1973
+          },
+          "director": {
+            "type": "string",
+            "example": "Russo Brothers"
+          },
+          "duracion": {
+            "type": "integer",
+            "example": 120
+          },
+          "stock": {
+            "type": "integer",
+            "example": 12
+          },
+          "precio_alquiler": {
+            "type": "integer",
+            "example": 20
+          },
+          "descripcion": {
+            "type": "string",
+            "example": "Esta película ..."
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id_user": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Pepe Rodriguez"
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "example": true
+          },
+          "email": {
+            "type": "string",
+            "example": "pepe@correo.com"
+          }
+        }
+      },
+      "LoginDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "pepe@correo.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Abc123"
+          }
+        }
+      },
+      "RegisterDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "pepe@correo.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Abc123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Pepe Rodriguez"
+          }
+        }
+      },
+      "TokenDTO": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "token132123token"
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "token132123token"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errorNumber": {
+            "type": "integer",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "example": "Message..."
+          }
+        }
+      }
+    }
+  }
+}
