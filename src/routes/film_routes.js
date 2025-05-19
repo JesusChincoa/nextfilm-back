@@ -1,7 +1,6 @@
-const express = require("express");
-const Usuario = require("../model/usuarioModel");
-const Joi = require("@hapi/joi");
+const express = require('express');
 
+const filmService = require('../services/film_service');
 
 const ruta = express.Router();
 
@@ -20,8 +19,8 @@ const schema = Joi.object({
 
 
 ruta.get("/getFilms" , (req, res) => {
-
+  const resultado = filmService.getFilms();
   resultado
-    .then((user) => res.status(200).json(user))
-    .catch((err) => res.status(400).json({ error: err }));
+    .then((films) => res.status(200).json(films));
+    // .catch((err) => res.status(400).json({ error: err }));
 });
