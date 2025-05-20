@@ -1,0 +1,44 @@
+const Usuario = require('../models/user_model');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+async function crearUsuario(body){
+    let usuario = new Usuario({
+        nombre: body.nombre,
+        email: body.email,
+        password: bcrypt.hashSync(body.password, 10),
+    })
+    return await usuario.save()
+}
+
+async function obtenerUsuario(email){
+    let usuario = await Usuario.findOne({email: email})
+    .select({_id:1, nombre:1, isAdmin:1, email:1, password:1})
+
+    return usuario
+}
+
+async function encontrarToken(token){
+    try {
+        // Verificar y decodificar el token
+        const decoded = jwt.verify(token, 'clave_secreta');
+
+        // Buscar al usuario por ID
+        const usuario = await Usuario.findOne({email: decoded.email})
+        .select({_id:1, nombre:1, isAdmin:1, email:1, password:1})
+
+        // Si no se encuentra el usuario, devuelve null
+        if (!usuario) {
+            return null;
+        }
+        // Usuario válido
+
+        return usuario;
+        
+    } catch (err) {
+        // Token inválido o expirado
+        return null;
+    }
+}
+
+module.exports = {crearUsuario, obtenerUsuario, encontrarToken}
