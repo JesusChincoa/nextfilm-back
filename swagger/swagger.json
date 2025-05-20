@@ -5,6 +5,11 @@
     "version": "1.0.0",
     "description": "API para gestionar el catálogo de películas del videoclub"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
   "tags": [
     {
       "name": "Films",
@@ -13,6 +18,10 @@
     {
       "name": "Auth",
       "description": "EndPoints for Authentication"
+    },
+    {
+      "name": "Database",
+      "description": "EndPoint for Initializing the database"
     }
   ],
   "paths": {
@@ -304,7 +313,7 @@
         }
       }
     },
-    "/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "Login",
@@ -354,7 +363,7 @@
       }
     },
 
-    "/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "Register",
@@ -371,7 +380,7 @@
         },
         "responses": {
           "201": {
-            "description": "Login Succeded",
+            "description": "Register Succeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -404,7 +413,7 @@
       }
     },
 
-    "/checkStatus": {
+    "/auth/checkStatus": {
       "post": {
         "tags": ["Auth"],
         "summary": "Check Token",
@@ -439,6 +448,28 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seed": {
+      "post": {
+        "tags": ["Database"],
+        "summary": "Initialize Database",
+        "description": "Clear and add new data to the database",
+        "responses": {
+          "200": {
+            "description": "Seed Succeded"
           },
           "500": {
             "description": "Internal Server Error",
