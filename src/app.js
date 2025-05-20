@@ -6,7 +6,7 @@ const films = require('./routes/film_routes')
 const swaggerUi = require('swagger-ui-express');
 
 
-mongoose.connect('mongodb://localhost:27017/nextfilms')
+mongoose.connect('mongodb://localhost:27017/nextfilm')
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => console.error('No se pudo conectar a MongoDB', err))
 
