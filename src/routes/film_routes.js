@@ -14,6 +14,30 @@ ruta.get('/getFilms' , (req, res) => {
     }));
 });
 
+ruta.get('/getFilms/:id'), (req, res )=>{
+  const resultado = filmService.getFilmById(req.params.id);
+
+  resultado
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Película no encontrada',
+        });
+      }
+      res.status(200).json(film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'Error al buscar la película: ' + err,
+      })
+    );
+  
+
+
+} // id = _id de mongo
+
 
 ruta.post('/newFilm' , (req, res) => {
   const resultado = filmService.newFilm(req.body);
@@ -30,3 +54,4 @@ ruta.post('/newFilm' , (req, res) => {
       message: 'Error al intentar guardar la nueva película' + err
     }));
 });
+
