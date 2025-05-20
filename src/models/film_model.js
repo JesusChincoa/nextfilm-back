@@ -6,35 +6,35 @@ export const filmSchema = new mongoose.Schema({
     
     titulo: {
         type: String,
-        require: true
+        required: true
     },
     descripcion: {
         type: String,
-        require: true
+        required: true
     },
     genero: {
         type: String,
-        require: true
+        required: true
     },
     estreno: {
         type: Number,
-        require: true
+        required: true
     },
     director: {
         type: String,
-        require: true
+        required: true
     },
     duracion: {
         type: Number,
-        require: true
+        required: true
     },
     stock: {
         type: Number,
-        require: true
+        required: true
     },
     precio_alquiler:{
         type: Number,
-        require: true
+        required: true
     }
 
 });
