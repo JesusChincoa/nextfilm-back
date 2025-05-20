@@ -10,7 +10,7 @@ mongoose.connect('mongodb://localhost:27017/nextfilm')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-// app.use('/api/auth', users)
+// app.use('/api/auth', users) TODO: Desde las rutas, poner el module.exports para acceder a ellas desde app
 // app.use('/api/films', films)
 
 app.listen(3000, () =>{
