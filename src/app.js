@@ -10,8 +10,8 @@ mongoose.connect('mongodb://localhost:27017/nextfilm')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use('/api/auth', users)
-app.use('/api/films', films)
+// app.use('/api/auth', users)
+// app.use('/api/films', films)
 
 app.listen(3000, () =>{
     console.log('API Express escuchando...')
