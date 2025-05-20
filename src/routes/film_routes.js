@@ -8,7 +8,10 @@ ruta.get('/getFilms' , (req, res) => {
   const resultado = filmService.getFilms();
   resultado
     .then((films) => res.status(200).json(films))
-    .catch((err) => res.status(400).json({ error: err }));
+    .catch((err) => res.status(500).json({
+      errorNumber: 500,
+      message: 'Error al intentar guardar la nueva película' + err
+    }));
 });
 
 
@@ -24,6 +27,6 @@ ruta.post('/newFilm' , (req, res) => {
     .then((films) => res.status(200).json(films))
     .catch((err) => res.status(500).json({
       errorNumber: 500,
-      message: 'Error al intentar guardar la nueva película'
+      message: 'Error al intentar guardar la nueva película' + err
     }));
 });
