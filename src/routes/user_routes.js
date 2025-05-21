@@ -6,24 +6,24 @@ const jwt = require('jsonwebtoken');
 const Joi = require('@hapi/joi');
 
 const schema = Joi.object({
-    nombre: Joi.string().required(),
+    name: Joi.string().required(),
     email: Joi.string().required()
 })
 
 ruta.post('/register', (req, res) =>{
     let body = req.body;
 
-    const {error, value} = schema.validate({nombre: body.nombre, email: body.email});
+    const {error, value} = schema.validate({name: body.name, email: body.email});
     if(!error){
         let usuario = userService.crearUsuario(body);
 
         usuario.then(user =>{
-            const token = jwt.sign({_id: user._id, nombre: user.nombre, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+            const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
             res.status(201).json({
                 token: token,
                 user:{
                     id_user: user._id,
-                    nombre: user.nombre,
+                    name: user.name,
                     isAdmin: user.isAdmin,
                     email: user.email,
                 }
@@ -54,12 +54,12 @@ ruta.post('/login', (req, res) => {
             })
         }
 
-        const token = jwt.sign({_id: user._id, nombre: user.nombre, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
                 id_user: user._id,
-                nombre: user.nombre,
+                name: user.name,
                 isAdmin: user.isAdmin,
                 email: user.email,
             }
@@ -80,12 +80,12 @@ ruta.post('/checkStatus', (req, res) => {
                 error: 'Token inválido'
             })
         }
-        const token = jwt.sign({_id: user._id, nombre: user.nombre, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
                 id_user: user._id,
-                nombre: user.nombre,
+                name: user.name,
                 isAdmin: user.isAdmin,
                 email: user.email,
             }

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 async function crearUsuario(body){
     let usuario = new Usuario({
-        nombre: body.nombre,
+        name: body.name,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
         isAdmin: body.isAdmin
@@ -14,7 +14,7 @@ async function crearUsuario(body){
 
 async function obtenerUsuario(email){
     let usuario = await Usuario.findOne({email: email})
-    .select({_id:1, nombre:1, isAdmin:1, email:1, password:1})
+    .select({_id:1, name:1, isAdmin:1, email:1, password:1})
 
     return usuario
 }
@@ -26,7 +26,7 @@ async function encontrarToken(token){
 
         // Buscar al usuario por ID
         const usuario = await Usuario.findOne({email: decoded.email})
-        .select({_id:1, nombre:1, isAdmin:1, email:1, password:1})
+        .select({_id:1, name:1, isAdmin:1, email:1, password:1})
 
         // Si no se encuentra el usuario, devuelve null
         if (!usuario) {
