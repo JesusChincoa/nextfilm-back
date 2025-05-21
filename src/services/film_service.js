@@ -93,7 +93,34 @@ async function deleteFromID(id) {
   return await Film.findByIdAndDelete({_id:id});
 }
 
+async function getLatestFilm() {
+
+  const result = await Film.findOne().sort({release: -1});
+
+  return result;
+}
+async function getNumberAllFilms(){
+  const result = await Film.countDocuments();
+  return  result;
+}
+async function getOldestFilm(){
+  const result = await Film.findOne({ release: { $ne: null } }).sort({release: 1});
+  return result;
+}
+async function getCheapest(){
+ const result = await Film.findOne().sort({rental_price: 1 });
+ return result;
+}
+async function getExpensive(){
+ const result = await Film.findOne().sort({rental_price: -1});
+ return result;
+}
+async function getLonguest(){
+  const result = await Film.findOne({duration: {$ne: null }}).sort({release:1});
+  return result;
+}
 
 module.exports={
-  getFilms,newFilm, getFilmById,updateFilmById, deleteFromID
+  getFilms,newFilm, getFilmById,updateFilmById, deleteFromID, getLatestFilm,getNumberAllFilms,getOldestFilm,
+  getCheapest, getExpensive,getLonguest
 }
