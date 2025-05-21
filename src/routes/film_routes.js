@@ -1,7 +1,7 @@
 const express = require('express');
 
 const filmService = require('../services/film_service');
-const verificarToken = require('../middleware/auth');
+const {verificarToken, verificarTokenAdmin} = require('../middleware/auth');
 const rute = express.Router();
 
 rute.get('/getFilms' ,verificarToken, (req, res) => {
@@ -37,7 +37,7 @@ rute.get('/getFilm/:id', verificarToken,  (req, res) => {
 
 
 
-rute.post('/newFilm' ,verificarToken, (req, res) => {
+rute.post('/newFilm' ,verificarTokenAdmin, (req, res) => {
   const result = filmService.newFilm(req.body);
 
   if(result == null) return res.status(400).json({
@@ -53,7 +53,7 @@ rute.post('/newFilm' ,verificarToken, (req, res) => {
     }));
 });
 
-rute.put('/updateFilm/:id',verificarToken, (req, res) => {
+rute.put('/updateFilm/:id',verificarTokenAdmin, (req, res) => {
   const result = filmService.updateFilmById(req.params.id, req.body); 
 
   result
@@ -75,7 +75,7 @@ rute.put('/updateFilm/:id',verificarToken, (req, res) => {
 });
 
 
-rute.delete('/deleteFilm/:id',verificarToken, (req,res) => {
+rute.delete('/deleteFilm/:id', verificarTokenAdmin, (req,res) => {
   const result = filmService.deleteFromID(req.params.id);
 
   
