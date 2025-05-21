@@ -54,7 +54,7 @@ async function seedDatabase() {
 
     for(let i = 0; i < 10; i++) {
         await userService.crearUsuario({
-            nombre: `User ${i}`,
+            name: `User ${i}`,
             email: `email${i}@email.com`,
             password: `password${i}`,
             isAdmin: i % 2 === 0
