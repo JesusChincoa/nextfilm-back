@@ -40,7 +40,7 @@ ruta.post('/register', async (req, res) =>{
         let usuario = userService.crearUsuario(body);
 
         usuario.then(user =>{
-            const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+            const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
             res.status(201).json({
                 token: token,
                 user:{
@@ -78,7 +78,7 @@ ruta.post('/login', (req, res) => {
             })
         }
 
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
@@ -104,7 +104,7 @@ ruta.post('/checkStatus', (req, res) => {
                 error: 'Token inválido'
             })
         }
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
