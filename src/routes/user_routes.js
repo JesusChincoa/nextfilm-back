@@ -7,18 +7,40 @@ const Joi = require('@hapi/joi');
 
 const schema = Joi.object({
     name: Joi.string().required(),
-    email: Joi.string().required()
+    email: Joi.string().required(),
+    password: Joi.string().pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
 })
 
-ruta.post('/register', (req, res) =>{
+ruta.post('/register', async (req, res) =>{
     let body = req.body;
 
-    const {error, value} = schema.validate({name: body.name, email: body.email});
-    if(!error){
+    try{
+        const {error, value} = schema.validate({name: body.name, email: body.email, password: body.password});
+        if(error){
+            return res.status(400).json({
+                errorNumber: 400,
+                error: 'Error en los datos de registro',
+            })
+        }
+
+        let existingUser = await userService.obtenerUsuario(body.email)
+        if(existingUser){
+            return res.status(400).json({
+                errorNumber: 400,
+                error: 'Usuario ya registrado',
+                user:{
+                    id_user: existingUser._id,
+                    name: existingUser.name,
+                    isAdmin: existingUser.isAdmin,
+                    email: existingUser.email,
+                }
+            })
+        }
+
         let usuario = userService.crearUsuario(body);
 
         usuario.then(user =>{
-            const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+            const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
             res.status(201).json({
                 token: token,
                 user:{
@@ -29,13 +51,15 @@ ruta.post('/register', (req, res) =>{
                 }
 
             })
-        }).catch(err =>{
-            res.status(400).json({
-            errorNumber: 400,
-            error: 'El usuario ya existe'
-                })
         })
     }
+    catch(err){
+        res.status(500).json({
+            errorNumber: 500,
+            error: 'Error en el servidor',
+        })
+    }
+
 })
 
 ruta.post('/login', (req, res) => {
@@ -54,7 +78,7 @@ ruta.post('/login', (req, res) => {
             })
         }
 
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
@@ -80,7 +104,7 @@ ruta.post('/checkStatus', (req, res) => {
                 error: 'Token inválido'
             })
         }
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
