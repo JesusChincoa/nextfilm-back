@@ -1,0 +1,99 @@
+const Film = require('../models/film_model');
+const Joi = require('@hapi/joi')
+const mongoose = require('mongoose')
+const schema = Joi.object({
+ 
+  title: Joi.string().required().min(3).max(30),
+  description: Joi.string().min(3).max(30),
+  genre: Joi.string().required(),
+  release: Joi.number(),
+  director: Joi.string(),
+  duration: Joi.number().min(0),
+  stock: Joi.number().required().min(0),
+  rental_price: Joi.number().required().min(0),
+});
+
+ async function getFilms() {
+    return await Film.find();
+}
+
+async function newFilm(body) {
+  const { error } = schema.validate({
+    title: body.title,
+    genre: body.genre,
+    stock: body.stock,
+    rental_price: body.rental_price,
+  });
+
+  if (error) return null;
+
+  const film = new Film({
+    title: body.title,
+    description: body.description,
+    genre: body.genre,
+    release: body.release,
+    director: body.director,
+    duration: body.duration,
+    stock: body.stock,
+    rental_price: body.rental_price,
+  });
+
+  const result = await film.save();
+  const { __v, ...filmWithoutV } = result.toObject();
+  return filmWithoutV;
+}
+
+
+
+async function getFilmById(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null; 
+  }
+
+  return await Film.findById(id).select({__v:0});
+}
+
+async function updateFilmById(id, body) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null;
+  }
+
+  const { error } = schema.validate({
+    title: body.title,
+    genre: body.genre,
+    stock: body.stock,
+    rental_price: body.rental_price,
+  });
+
+  if (error) return null;
+
+  const updated = await Film.findByIdAndUpdate(
+    id,
+    {
+      title: body.title,
+      description: body.description,
+      genre: body.genre,
+      release: body.release,
+      director: body.director,
+      duration: body.duration,
+      stock: body.stock,
+      rental_price: body.rental_price,
+    },
+    { new: true, projection: { __v: 0 } }
+  );
+
+  return updated;
+}
+
+async function deleteFromID(id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return null; 
+  }
+
+  return await Film.findByIdAndDelete({_id:id});
+}
+
+
+module.exports={
+  getFilms,newFilm, getFilmById,updateFilmById, deleteFromID
+}

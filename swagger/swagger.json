@@ -5,6 +5,11 @@
     "version": "1.0.0",
     "description": "API para gestionar el catálogo de películas del videoclub"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
   "tags": [
     {
       "name": "Films",
@@ -13,6 +18,10 @@
     {
       "name": "Auth",
       "description": "EndPoints for Authentication"
+    },
+    {
+      "name": "Database",
+      "description": "EndPoint for Initializing the database"
     }
   ],
   "paths": {
@@ -304,7 +313,7 @@
         }
       }
     },
-    "/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "Login",
@@ -354,7 +363,7 @@
       }
     },
 
-    "/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "Register",
@@ -371,7 +380,7 @@
         },
         "responses": {
           "201": {
-            "description": "Login Succeded",
+            "description": "Register Succeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -404,7 +413,7 @@
       }
     },
 
-    "/checkStatus": {
+    "/auth/checkStatus": {
       "post": {
         "tags": ["Auth"],
         "summary": "Check Token",
@@ -452,6 +461,28 @@
           }
         }
       }
+    },
+    "/seed": {
+      "post": {
+        "tags": ["Database"],
+        "summary": "Initialize Database",
+        "description": "Clear and add new data to the database",
+        "responses": {
+          "200": {
+            "description": "Seed Succeded"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -459,27 +490,27 @@
       "Pelicula": {
         "type": "object",
         "properties": {
-          "id_pelicula": {
-            "type": "integer",
-            "example": 1
+          "filmId": {
+            "type": "string",
+            "example": "324dfd2321..."
           },
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -487,36 +518,36 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "renting_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
-            "example": "Esta película ..."
+            "example": "This film ..."
           }
         }
       },
       "PeliculaDTO": {
         "type": "object",
         "properties": {
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -524,11 +555,11 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "renting_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
             "example": "Esta película ..."
           }
@@ -538,8 +569,8 @@
         "type": "object",
         "properties": {
           "id_user": {
-            "type": "integer",
-            "example": 1
+            "type": "string",
+            "example": "324dfd2321..."
           },
           "name": {
             "type": "string",

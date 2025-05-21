@@ -14,9 +14,9 @@ mongoose.connect('mongodb://localhost:27017/nextfilm')
 
 const app = express()
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
- app.use('/api/auth', users)
- app.use('/api', films)
+app.use(express.urlencoded({extended: true}));
+app.use('/api/auth', users);
+ app.use('/api', films);
  app.use('/api/database', seed);
 
  app.use(cors({

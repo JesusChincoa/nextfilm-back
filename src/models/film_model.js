@@ -2,39 +2,41 @@
 
 const mongoose = require('mongoose');
 
-export const filmSchema = new mongoose.Schema({
+ const filmSchema = new mongoose.Schema({
     
-    titulo: {
+    title: {
         type: String,
-        require: true
+        required: true,
+        unique: true
     },
-    descripcion: {
+    description: {
         type: String,
-        require: true
+      
     },
-    genero: {
+    genre: {
         type: String,
-        require: true
+        required: true
     },
-    estreno: {
-        type: Number,
-        require: true
+    release: {
+        type: Date,
+        
     },
     director: {
         type: String,
-        require: true
+       
     },
-    duracion: {
+    duration: {
         type: Number,
-        require: true
+       
     },
     stock: {
         type: Number,
-        require: true
+        required: true
     },
-    precio_alquiler:{
+    rental_price:{
         type: Number,
-        require: true
+        required: true
     }
 
 });
+module.exports= mongoose.model('Film', filmSchema);

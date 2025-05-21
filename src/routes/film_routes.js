@@ -1,27 +1,101 @@
-const express = require("express");
-const Usuario = require("../model/usuarioModel");
-const Joi = require("@hapi/joi");
+const express = require('express');
+
+const filmService = require('../services/film_service');
+
+const rute = express.Router();
+
+rute.get('/getFilms' , (req, res) => {
+  const result = filmService.getFilms();
+  result
+    .then((films) => res.status(200).json(films))
+    .catch((err) => res.status(500).json({
+      errorNumber: 500,
+      message: 'An error ocurred while searching the movies' + err
+    }));
+});
+
+rute.get('/getFilm/:id', (req, res) => {
+  const result = filmService.getFilmById(req.params.id);
+
+  result
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Movie not found',
+        });
+      }
+      res.status(200).json(film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'An error ocurred while searching the movie: ' + err,
+      })
+    );
+});
 
 
-const ruta = express.Router();
 
-const schema = Joi.object({
- 
-  titulo: Joi.string().required().min(3).max(30),
-  descripcion: Joi.string().min(3).max(30),
-  genero: Joi.string().required(),
-  estreno: Joi.number(),
-  director: Joi.string(),
-  duracion: Joi.number().min(0),
-  stock: Joi.number().min(0),
-  precio_alquiler: Joi.number().min(0),
+rute.post('/newFilm' , (req, res) => {
+  const result = filmService.newFilm(req.body);
+
+  if(result == null) return res.status(400).json({
+    errorNumber: 400,
+    message: 'Incorrect film data entered'
+  });
+
+  result
+    .then((films) => res.status(200).json(films))
+    .catch((err) => res.status(500).json({
+      errorNumber: 500,
+      message: 'An error has ocurred while saving the new film' + err
+    }));
+});
+
+rute.put('/updateFilm/:id', (req, res) => {
+  const result = filmService.updateFilmById(req.params.id, req.body); 
+
+  result
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Data invalid or movie not found',
+        });
+      }
+      res.status(200).json(film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'An error has ocurred while updating the movie: ' + err,
+      })
+    );
+});
+
+
+rute.delete('/deleteFilm/:id', (req,res) => {
+  const result = filmService.deleteFromID(req.params.id);
+
   
-});
+  result
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Movie not found',
+        });
+      }
+      res.status(200).json("Movie deleted: "+film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'An error has ocurred while searching the movie: ' + err,
+      })
+    );
+})
 
 
-ruta.get("/getFilms" , (req, res) => {
-
-  resultado
-    .then((user) => res.status(200).json(user))
-    .catch((err) => res.status(400).json({ error: err }));
-});
+module.exports=rute
