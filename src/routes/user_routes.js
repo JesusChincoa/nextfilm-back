@@ -100,8 +100,8 @@ ruta.post('/checkStatus', (req, res) => {
 
     userService.encontrarToken(token).then(user => {
         if(!user){
-            return res.status(401).json({
-                error: 'Token inválido'
+            return res.status(400).json({
+                error: 'Token no activo'
             })
         }
         const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
