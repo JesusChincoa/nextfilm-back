@@ -7,6 +7,7 @@ async function crearUsuario(body){
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
+        isAdmin: body.isAdmin
     })
     return await usuario.save()
 }
