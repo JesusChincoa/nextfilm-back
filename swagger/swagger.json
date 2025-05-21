@@ -491,8 +491,8 @@
         "type": "object",
         "properties": {
           "filmId": {
-            "type": "integer",
-            "example": 1
+            "type": "string",
+            "example": "324dfd2321..."
           },
           "title": {
             "type": "string",
@@ -503,8 +503,8 @@
             "example": "Drama"
           },
           "release": {
-            "type": "integer",
-            "example": 1973
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
@@ -540,8 +540,8 @@
             "example": "Drama"
           },
           "release": {
-            "type": "integer",
-            "example": 1973
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
@@ -569,8 +569,8 @@
         "type": "object",
         "properties": {
           "id_user": {
-            "type": "integer",
-            "example": 1
+            "type": "string",
+            "example": "324dfd2321..."
           },
           "name": {
             "type": "string",
