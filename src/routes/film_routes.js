@@ -2,27 +2,27 @@ const express = require('express');
 
 const filmService = require('../services/film_service');
 
-export const ruta = express.Router();
+const rute = express.Router();
 
-ruta.get('/getFilms' , (req, res) => {
-  const resultado = filmService.getFilms();
-  resultado
+rute.get('/getFilms' , (req, res) => {
+  const result = filmService.getFilms();
+  result
     .then((films) => res.status(200).json(films))
     .catch((err) => res.status(500).json({
       errorNumber: 500,
-      message: 'Error al intentar guardar la nueva película' + err
+      message: 'An error ocurred while searching the movies' + err
     }));
 });
 
-ruta.get('/getFilms/:id'), (req, res )=>{
-  const resultado = filmService.getFilmById(req.params.id);
+rute.get('/getFilm/:id', (req, res) => {
+  const result = filmService.getFilmById(req.params.id);
 
-  resultado
+  result
     .then((film) => {
       if (!film) {
         return res.status(400).json({
           errorNumber: 400,
-          message: 'Película no encontrada',
+          message: 'Movie not found',
         });
       }
       res.status(200).json(film);
@@ -30,28 +30,72 @@ ruta.get('/getFilms/:id'), (req, res )=>{
     .catch((err) =>
       res.status(500).json({
         errorNumber: 500,
-        message: 'Error al buscar la película: ' + err,
+        message: 'An error ocurred while searching the movie: ' + err,
       })
     );
-  
+});
 
 
-} // id = _id de mongo
 
+rute.post('/newFilm' , (req, res) => {
+  const result = filmService.newFilm(req.body);
 
-ruta.post('/newFilm' , (req, res) => {
-  const resultado = filmService.newFilm(req.body);
-
-  if(resultado == null) return res.status(400).json({
+  if(result == null) return res.status(400).json({
     errorNumber: 400,
-    message: 'Datos de película introducidos son incorrectos'
+    message: 'Incorrect film data entered'
   });
 
-  resultado
+  result
     .then((films) => res.status(200).json(films))
     .catch((err) => res.status(500).json({
       errorNumber: 500,
-      message: 'Error al intentar guardar la nueva película' + err
+      message: 'An error has ocurred while saving the new film' + err
     }));
 });
 
+rute.put('/updateFilm/:id', (req, res) => {
+  const result = filmService.updateFilmById(req.params.id, req.body); 
+
+  result
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Data invalid or movie not found',
+        });
+      }
+      res.status(200).json(film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'An error has ocurred while updating the movie: ' + err,
+      })
+    );
+});
+
+
+rute.delete('/deleteFilm/:id', (req,res) => {
+  const result = filmService.deleteFromID(req.params.id);
+
+  
+  result
+    .then((film) => {
+      if (!film) {
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Movie not found',
+        });
+      }
+      res.status(200).json("Movie deleted: "+film);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        message: 'An error has ocurred while searching the movie: ' + err,
+      })
+    );
+})
+
+
+module.exports=rute
