@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const films = require('./routes/film_routes')
+const seed = require('./routes/seed_route')
 // const users = require('./routes/user_routes')
 
 
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 //  app.use('/api', users)
  app.use('/api', films)
+ app.use('/api/database', seed)
 app.listen(3000, () =>{
     console.log('API Express Listening...')
 
