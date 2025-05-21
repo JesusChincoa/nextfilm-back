@@ -24,7 +24,6 @@ app.use("/api/auth", users);
 app.use("/api", films);
 app.use("/api/database", seed);
 
-
 app.listen(3000, () => {
   console.log("API Express Listening...");
 });
