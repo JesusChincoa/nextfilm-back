@@ -3,14 +3,14 @@ const Joi = require('@hapi/joi')
 const mongoose = require('mongoose')
 const schema = Joi.object({
  
-  titulo: Joi.string().required().min(3).max(30),
-  descripcion: Joi.string().min(3).max(30),
-  genero: Joi.string().required(),
-  estreno: Joi.number(),
+  title: Joi.string().required().min(3).max(30),
+  description: Joi.string().min(3).max(30),
+  genre: Joi.string().required(),
+  release: Joi.number(),
   director: Joi.string(),
-  duracion: Joi.number().min(0),
+  duration: Joi.number().min(0),
   stock: Joi.number().required().min(0),
-  precio_alquiler: Joi.number().required().min(0),
+  rental_price: Joi.number().required().min(0),
 });
 
  async function getFilms() {
@@ -19,23 +19,23 @@ const schema = Joi.object({
 
 async function newFilm(body) {
   const { error } = schema.validate({
-    titulo: body.titulo,
-    genero: body.genero,
+    title: body.title,
+    genre: body.genre,
     stock: body.stock,
-    precio_alquiler: body.precio_alquiler,
+    rental_price: body.rental_price,
   });
 
   if (error) return null;
 
   const film = new Film({
-    titulo: body.titulo,
-    descripcion: body.descripcion,
-    genero: body.genero,
-    estreno: body.estreno,
+    title: body.title,
+    description: body.description,
+    genre: body.genre,
+    release: body.release,
     director: body.director,
-    duracion: body.duracion,
+    duration: body.duration,
     stock: body.stock,
-    precio_alquiler: body.precio_alquiler,
+    rental_price: body.rental_price,
   });
 
   const result = await film.save();
@@ -59,10 +59,10 @@ async function updateFilmById(id, body) {
   }
 
   const { error } = schema.validate({
-    titulo: body.titulo,
-    genero: body.genero,
+    title: body.title,
+    genre: body.genre,
     stock: body.stock,
-    precio_alquiler: body.precio_alquiler,
+    rental_price: body.rental_price,
   });
 
   if (error) return null;
@@ -70,14 +70,14 @@ async function updateFilmById(id, body) {
   const updated = await Film.findByIdAndUpdate(
     id,
     {
-      titulo: body.titulo,
-      descripcion: body.descripcion,
-      genero: body.genero,
-      estreno: body.estreno,
+      title: body.title,
+      description: body.description,
+      genre: body.genre,
+      release: body.release,
       director: body.director,
-      duracion: body.duracion,
+      duration: body.duration,
       stock: body.stock,
-      precio_alquiler: body.precio_alquiler,
+      rental_price: body.rental_price,
     },
     { new: true, projection: { __v: 0 } }
   );

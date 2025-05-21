@@ -4,28 +4,28 @@ const mongoose = require('mongoose');
 
  const filmSchema = new mongoose.Schema({
     
-    titulo: {
+    title: {
         type: String,
         required: true,
         unique: true
     },
-    descripcion: {
+    description: {
         type: String,
       
     },
-    genero: {
+    genre: {
         type: String,
         required: true
     },
-    estreno: {
-        type: Number,
+    release: {
+        type: Date,
         
     },
     director: {
         type: String,
        
     },
-    duracion: {
+    duration: {
         type: Number,
        
     },
@@ -33,7 +33,7 @@ const mongoose = require('mongoose');
         type: Number,
         required: true
     },
-    precio_alquiler:{
+    rental_price:{
         type: Number,
         required: true
     }
