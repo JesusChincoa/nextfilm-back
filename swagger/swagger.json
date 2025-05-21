@@ -490,27 +490,27 @@
       "Pelicula": {
         "type": "object",
         "properties": {
-          "id_pelicula": {
-            "type": "integer",
-            "example": 1
+          "filmId": {
+            "type": "string",
+            "example": "324dfd2321..."
           },
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -518,36 +518,36 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "renting_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
-            "example": "Esta película ..."
+            "example": "This film ..."
           }
         }
       },
       "PeliculaDTO": {
         "type": "object",
         "properties": {
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -555,11 +555,11 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "renting_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
             "example": "Esta película ..."
           }
@@ -569,8 +569,8 @@
         "type": "object",
         "properties": {
           "id_user": {
-            "type": "integer",
-            "example": 1
+            "type": "string",
+            "example": "324dfd2321..."
           },
           "name": {
             "type": "string",
