@@ -1,10 +1,10 @@
 const express = require('express');
 
 const filmService = require('../services/film_service');
-
+const verificarToken = require('../middleware/auth');
 const rute = express.Router();
 
-rute.get('/getFilms' , (req, res) => {
+rute.get('/getFilms' ,verificarToken, (req, res) => {
   const result = filmService.getFilms();
   result
     .then((films) => res.status(200).json(films))
@@ -14,7 +14,7 @@ rute.get('/getFilms' , (req, res) => {
     }));
 });
 
-rute.get('/getFilm/:id', (req, res) => {
+rute.get('/getFilm/:id', verificarToken,  (req, res) => {
   const result = filmService.getFilmById(req.params.id);
 
   result
@@ -37,7 +37,7 @@ rute.get('/getFilm/:id', (req, res) => {
 
 
 
-rute.post('/newFilm' , (req, res) => {
+rute.post('/newFilm' ,verificarToken, (req, res) => {
   const result = filmService.newFilm(req.body);
 
   if(result == null) return res.status(400).json({
@@ -53,7 +53,7 @@ rute.post('/newFilm' , (req, res) => {
     }));
 });
 
-rute.put('/updateFilm/:id', (req, res) => {
+rute.put('/updateFilm/:id',verificarToken, (req, res) => {
   const result = filmService.updateFilmById(req.params.id, req.body); 
 
   result
@@ -75,7 +75,7 @@ rute.put('/updateFilm/:id', (req, res) => {
 });
 
 
-rute.delete('/deleteFilm/:id', (req,res) => {
+rute.delete('/deleteFilm/:id',verificarToken, (req,res) => {
   const result = filmService.deleteFromID(req.params.id);
 
   
@@ -87,7 +87,7 @@ rute.delete('/deleteFilm/:id', (req,res) => {
           message: 'Movie not found',
         });
       }
-      res.status(200).json("Movie deleted: "+film);
+      res.status(200).json('👍');
     })
     .catch((err) =>
       res.status(500).json({
