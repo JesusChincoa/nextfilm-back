@@ -19,14 +19,16 @@ const mongoose = require('mongoose');
     },
     release: {
         type: Date,
-        
+        required: true,
     },
     director: {
         type: String,
+        required: true,
        
     },
     duration: {
         type: Number,
+        required: true,
        
     },
     stock: {

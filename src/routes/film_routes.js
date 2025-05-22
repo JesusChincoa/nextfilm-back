@@ -46,7 +46,7 @@ rute.post('/newFilm' ,verificarTokenAdmin, (req, res) => {
   });
 
   result
-    .then((films) => res.status(200).json(films))
+    .then((films) => res.status(201).json(films))
     .catch((err) => res.status(500).json({
       errorNumber: 500,
       message: 'An error has ocurred while saving the new film' + err
@@ -87,7 +87,7 @@ rute.delete('/deleteFilm/:id', verificarTokenAdmin, (req,res) => {
           message: 'Movie not found',
         });
       }
-      res.status(200).json('👍');
+      res.status(200).json('Film deleted');
     })
     .catch((err) =>
       res.status(500).json({
