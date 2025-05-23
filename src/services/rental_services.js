@@ -48,4 +48,16 @@ async function updateRental(rental, body) {
     return await rental.save();
 }
 
-module.exports = {showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId}
+async function returnRental(idRental) {
+    let rental = await Rental.findById(idRental);
+
+    if (!rental) 
+        return null; // Rental not found
+
+
+    rental.returnDate = new Date();
+    
+    return await rental.save();
+}
+
+module.exports = {showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId, returnRental}
