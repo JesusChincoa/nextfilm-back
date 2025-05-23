@@ -4,7 +4,10 @@ const films = require("./routes/film_routes");
 const seed = require("./routes/seed_route");
 const users = require("./routes/user_routes");
 const alt_films = require("./routes/film_alternative_routes")
+const rentals = require("./routes/rental_routes");
+
 const cors = require("cors");
+
 
 mongoose
   .connect("mongodb://localhost:27017/nextfilm")
@@ -22,6 +25,7 @@ app.use("/api", alt_films);
 app.use("/api/auth", users);
 app.use("/api", films);
 app.use("/api/database", seed);
+app.use("/api/rental", rentals)
 
 app.listen(3000, () => {
   console.log("API Express Listening...");

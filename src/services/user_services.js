@@ -1,4 +1,5 @@
 const Usuario = require('../models/user_model');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -17,6 +18,17 @@ async function obtenerUsuario(email){
     .select({_id:1, name:1, isAdmin:1, email:1, password:1})
 
     return usuario
+}
+
+async function obtenerUsuarioPorId(id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return null; // Así devuelves null y puedes responder con 400 en la ruta
+    }
+    let usuario = await Usuario.findById(id)
+    .select({_id:1, name:1, isAdmin:1, email:1, password:1})
+
+    return usuario
+
 }
 
 async function encontrarToken(token){
@@ -42,4 +54,4 @@ async function encontrarToken(token){
     }
 }
 
-module.exports = {crearUsuario, obtenerUsuario, encontrarToken}
+module.exports = {crearUsuario, obtenerUsuario, encontrarToken, obtenerUsuarioPorId}

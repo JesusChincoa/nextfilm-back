@@ -1,9 +1,12 @@
 const express = require('express');
 
-const Usuario = require('../models/user_model'); // temporal
+const Usuario = require('../models/user_model'); 
+const Rental = require('../models/rental_model'); 
+const Film = require('../models/film_model'); 
 
 const filmService = require('../services/film_service');
 const userService = require('../services/user_services');
+const rentalService = require('../services/rental_services');
 const rute = express.Router();
 
 rute.get('/seed', async (req, res) => {
@@ -24,13 +27,22 @@ rute.get('/seed', async (req, res) => {
 
 async function seedDatabase() {
 
+
+    // Delete all rentals
+    const rentals = await getRentals();
+    rentals.forEach(async (rental) => {
+        await delteRental(rental._id);
+    }
+    );
+
+    // Delete all films
     const films = await filmService.getFilms();
 
     films.forEach(async (film) => {
         await filmService.deleteFromID(film._id);
     });
 
-
+    // Delete all users
     const users = await getUsers();
 
     users.forEach(async (user) => {
@@ -46,7 +58,7 @@ async function seedDatabase() {
             director: 'Director Name',
             duration: 60 + i*2,
             stock: 10 - i,
-            rental_price: 5.99 + i + Math.random(),
+            rental_price: 5.99 + i,
         });
     }
 
@@ -62,6 +74,28 @@ async function seedDatabase() {
     }
 
 
+
+    for(let i = 0; i < 10; i++) {
+        let user = await Usuario.findOne({email: `email${i}@email.com`});
+        let film = await Film.findOne({title: `Film ${i}`});
+        await rentalService.createRental({
+            userId: user._id,
+            filmId: film._id,
+            paid: i % 2 === 0,
+            price: 5.99 + i
+        });
+    }
+
+
+}
+
+
+async function delteRental(id) {
+    return await Rental.findByIdAndDelete({_id:id});
+}
+
+async function getRentals() {
+    return await Rental.find();
 }
 
 
