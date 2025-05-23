@@ -28,12 +28,16 @@
       "description": "EndPoint for Initializing the database"
     }
   ],
-  "paths": {
-    "/getFilms": {
+  "paths": {    "/getFilms": {
       "get": {
         "tags": ["Films"],
         "summary": "Get all Films",
         "description": "Return all the films of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Films List",
@@ -70,12 +74,16 @@
           }
         }
       }
-    },
-    "/getFilm/{idFilm}": {
+    },    "/getFilm/{idFilm}": {
       "get": {
         "tags": ["Films"],
         "summary": "Get a Film",
         "description": "Return a concrete film of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -131,12 +139,16 @@
           }
         }
       }
-    },
-    "/updateFilm/{idFilm}": {
+    },    "/updateFilm/{idFilm}": {
       "put": {
         "tags": ["Films"],
         "summary": "Update a Film",
         "description": "Return the Film updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -202,12 +214,16 @@
           }
         }
       }
-    },
-    "/newFilm": {
+    },    "/newFilm": {
       "post": {
         "tags": ["Films"],
         "summary": "Create a new Film",
         "description": "Return the new Film",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -261,13 +277,16 @@
           }
         }
       }
-    },
-
-    "/deleteFilm/{idFilm}": {
+    },    "/deleteFilm/{idFilm}": {
       "delete": {
         "tags": ["Films"],
         "summary": "Delete a Film",
         "description": "Return a 200 status if deletion succeded",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -316,12 +335,16 @@
           }
         }
       }
-    },
-    "/filmNews": {
+    },    "/filmNews": {
       "get": {
         "tags": ["Films"],
         "summary": "Get News from the VideoClub Films",
         "description": "Get News from the VideoClub Films",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Film Deleted"
@@ -498,12 +521,16 @@
           }
         }
       }
-    },
-    "/seed": {
+    },    "/seed": {
       "post": {
         "tags": ["Database"],
         "summary": "Initialize Database",
         "description": "Clear and add new data to the database",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Seed Succeded"
@@ -520,12 +547,16 @@
           }
         }
       }
-    },
-    "/getRentals": {
+    },    "/getRentals": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get all Rentals",
         "description": "Return all the rentals of the videoclub",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Rentals List",
@@ -562,12 +593,16 @@
           }
         }
       }
-    },
-    "/getRental/{idRental}": {
+    },    "/getRental/{idRental}": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get a Rental",
         "description": "Return a concrete rental of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -623,12 +658,16 @@
           }
         }
       }
-    },
-    "/getRentalsByUser/{idUser}": {
+    },    "/getRentalsByUser/{idUser}": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get Rentals by User",
         "description": "Return all the rentals of a user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idUser",
@@ -677,12 +716,16 @@
           }
         }
       }
-    },
-    "/newRental": {
+    },    "/newRental": {
       "post": {
         "tags": ["Rentals"],
         "summary": "Create a new Rental",
         "description": "Return the new Rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -736,12 +779,16 @@
           }
         }
       }
-    },
-    "/updateRental/{idRental}": {
+    },    "/updateRental/{idRental}": {
       "put": {
         "tags": ["Rentals"],
         "summary": "Update a Rental",
         "description": "Return the Rental updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -807,12 +854,16 @@
           }
         }
       }
-    },
-    "/returnRental/{idRental}": {
+    },    "/returnRental/{idRental}": {
       "put": {
         "tags": ["Rentals"],
         "summary": "Mark a Rental as returned",
         "description": "Mark the date of return of a rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -869,8 +920,21 @@
         }
       }
     }
-  },
-  "components": {
+  },  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter JWT Bearer token **_only_**"
+      },
+      "adminAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter Admin JWT Bearer token with isAdmin:true **_only_**"
+      }
+    },
     "schemas": {
       "Pelicula": {
         "type": "object",
