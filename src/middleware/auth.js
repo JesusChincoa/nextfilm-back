@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
  
 let verificarToken = (req, res, next) =>{
-    let token = req.get('Authorization')
+    let token = req.get('Authorization');
+    token = token.replace('Bearer ', '')
     jwt.verify(token, 'clave_secreta', (err, decoded) =>{
         if (err){
             return res.status(401).json({err})
@@ -15,6 +16,7 @@ let verificarToken = (req, res, next) =>{
 
 let verificarTokenAdmin = (req, res, next) =>{
     let token = req.get('Authorization')
+    token = token.replace('Bearer ', '')
     jwt.verify(token, 'clave_secreta', (err, decoded) =>{
         if (err){
             return res.status(401).json({err})

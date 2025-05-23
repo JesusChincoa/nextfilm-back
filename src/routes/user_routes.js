@@ -8,7 +8,7 @@ const Joi = require('@hapi/joi');
 const schema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
-    password: Joi.string().pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
+    password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/).required(),
 })
 
 ruta.post('/register', async (req, res) =>{
@@ -20,6 +20,7 @@ ruta.post('/register', async (req, res) =>{
             return res.status(400).json({
                 errorNumber: 400,
                 error: 'Error en los datos de registro',
+                error
             })
         }
 

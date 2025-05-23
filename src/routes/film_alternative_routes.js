@@ -5,7 +5,7 @@ const {verificarToken} = require('../middleware/auth');
 const rute = express.Router();
 
 
-rute.get('/home', verificarToken, (req, res) => {
+rute.get('/moviesNews', verificarToken, (req, res) => {
   
   const LatestFilm = filmService.getLatestFilm();
   const TotalFilms = filmService.getNumberAllFilms();

@@ -53,7 +53,7 @@ async function seedDatabase() {
         await filmService.newFilm({
             title: `Film ${i}`,
             description: `Description for Film ${i}`,
-            genre: 'Action',
+            genre: 'action',
             release: new Date(),
             director: 'Director Name',
             duration: 60 + i*2,
