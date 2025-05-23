@@ -624,7 +624,7 @@
         }
       }
     },
-    "getRentalsByUser/{idUser}": {
+    "/getRentalsByUser/{idUser}": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get Rentals by User",
@@ -809,7 +809,7 @@
       }
     },
     "/returnRental/{idRental}": {
-      "delete": {
+      "put": {
         "tags": ["Rentals"],
         "summary": "Mark a Rental as returned",
         "description": "Mark the date of return of a rental",
@@ -888,7 +888,8 @@
             "example": "Drama"
           },
           "release": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           },
           "director": {
@@ -925,7 +926,8 @@
             "example": "Drama"
           },
           "release": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           },
           "director": {
@@ -991,15 +993,18 @@
             "example": true
           },
           "rentalDate": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           },
           "expedtedReturnDate": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           },
           "returnDate": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           }
         }
@@ -1016,7 +1021,8 @@
             "example": "324dfd2321..."
           },
           "rentalDate": {
-            "type": "Date",
+            "type": "string",
+            "format": "date",
             "example": "1973-02-12"
           },
           "paid": {
