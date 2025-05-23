@@ -992,6 +992,10 @@
             "type": "boolean",
             "example": true
           },
+          "cantidad": {
+            "type": "number",
+            "example": "12.99"
+          },
           "rentalDate": {
             "type": "string",
             "format": "date",
@@ -1020,10 +1024,9 @@
             "type": "string",
             "example": "324dfd2321..."
           },
-          "rentalDate": {
-            "type": "string",
-            "format": "date",
-            "example": "1973-02-12"
+          "cantidad": {
+            "type": "number",
+            "example": "12.99"
           },
           "paid": {
             "type": "boolean",
