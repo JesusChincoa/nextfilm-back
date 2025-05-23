@@ -28,7 +28,8 @@
       "description": "EndPoint for Initializing the database"
     }
   ],
-  "paths": {    "/getFilms": {
+  "paths": {
+    "/getFilms": {
       "get": {
         "tags": ["Films"],
         "summary": "Get all Films",
@@ -74,7 +75,8 @@
           }
         }
       }
-    },    "/getFilm/{idFilm}": {
+    },
+    "/getFilm/{idFilm}": {
       "get": {
         "tags": ["Films"],
         "summary": "Get a Film",
@@ -139,7 +141,8 @@
           }
         }
       }
-    },    "/updateFilm/{idFilm}": {
+    },
+    "/updateFilm/{idFilm}": {
       "put": {
         "tags": ["Films"],
         "summary": "Update a Film",
@@ -214,7 +217,8 @@
           }
         }
       }
-    },    "/newFilm": {
+    },
+    "/newFilm": {
       "post": {
         "tags": ["Films"],
         "summary": "Create a new Film",
@@ -277,7 +281,8 @@
           }
         }
       }
-    },    "/deleteFilm/{idFilm}": {
+    },
+    "/deleteFilm/{idFilm}": {
       "delete": {
         "tags": ["Films"],
         "summary": "Delete a Film",
@@ -335,7 +340,8 @@
           }
         }
       }
-    },    "/filmNews": {
+    },
+    "/filmNews": {
       "get": {
         "tags": ["Films"],
         "summary": "Get News from the VideoClub Films",
@@ -372,7 +378,7 @@
         }
       }
     },
-    
+
     "/auth/login": {
       "post": {
         "tags": ["Auth"],
@@ -521,7 +527,8 @@
           }
         }
       }
-    },    "/seed": {
+    },
+    "/seed": {
       "post": {
         "tags": ["Database"],
         "summary": "Initialize Database",
@@ -547,7 +554,8 @@
           }
         }
       }
-    },    "/getRentals": {
+    },
+    "/getRentals": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get all Rentals",
@@ -593,7 +601,8 @@
           }
         }
       }
-    },    "/getRental/{idRental}": {
+    },
+    "/getRental/{idRental}": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get a Rental",
@@ -658,7 +667,8 @@
           }
         }
       }
-    },    "/getRentalsByUser/{idUser}": {
+    },
+    "/getRentalsByUser/{idUser}": {
       "get": {
         "tags": ["Rentals"],
         "summary": "Get Rentals by User",
@@ -716,7 +726,8 @@
           }
         }
       }
-    },    "/newRental": {
+    },
+    "/newRental": {
       "post": {
         "tags": ["Rentals"],
         "summary": "Create a new Rental",
@@ -779,7 +790,8 @@
           }
         }
       }
-    },    "/updateRental/{idRental}": {
+    },
+    "/updateRental/{idRental}": {
       "put": {
         "tags": ["Rentals"],
         "summary": "Update a Rental",
@@ -854,7 +866,8 @@
           }
         }
       }
-    },    "/returnRental/{idRental}": {
+    },
+    "/returnRental/{idRental}": {
       "put": {
         "tags": ["Rentals"],
         "summary": "Mark a Rental as returned",
@@ -920,7 +933,8 @@
         }
       }
     }
-  },  "components": {
+  },
+  "components": {
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
