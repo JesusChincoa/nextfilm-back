@@ -34,6 +34,11 @@
         "tags": ["Films"],
         "summary": "Get all Films",
         "description": "Return all the films of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Films List",
@@ -76,6 +81,11 @@
         "tags": ["Films"],
         "summary": "Get a Film",
         "description": "Return a concrete film of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -137,6 +147,11 @@
         "tags": ["Films"],
         "summary": "Update a Film",
         "description": "Return the Film updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -208,6 +223,11 @@
         "tags": ["Films"],
         "summary": "Create a new Film",
         "description": "Return the new Film",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -262,12 +282,16 @@
         }
       }
     },
-
     "/deleteFilm/{idFilm}": {
       "delete": {
         "tags": ["Films"],
         "summary": "Delete a Film",
         "description": "Return a 200 status if deletion succeded",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -322,6 +346,11 @@
         "tags": ["Films"],
         "summary": "Get News from the VideoClub Films",
         "description": "Get News from the VideoClub Films",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Film Deleted"
@@ -349,7 +378,7 @@
         }
       }
     },
-    
+
     "/auth/login": {
       "post": {
         "tags": ["Auth"],
@@ -504,6 +533,11 @@
         "tags": ["Database"],
         "summary": "Initialize Database",
         "description": "Clear and add new data to the database",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Seed Succeded"
@@ -526,6 +560,11 @@
         "tags": ["Rentals"],
         "summary": "Get all Rentals",
         "description": "Return all the rentals of the videoclub",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Rentals List",
@@ -568,6 +607,11 @@
         "tags": ["Rentals"],
         "summary": "Get a Rental",
         "description": "Return a concrete rental of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -629,6 +673,11 @@
         "tags": ["Rentals"],
         "summary": "Get Rentals by User",
         "description": "Return all the rentals of a user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idUser",
@@ -683,6 +732,11 @@
         "tags": ["Rentals"],
         "summary": "Create a new Rental",
         "description": "Return the new Rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -742,6 +796,11 @@
         "tags": ["Rentals"],
         "summary": "Update a Rental",
         "description": "Return the Rental updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -813,6 +872,11 @@
         "tags": ["Rentals"],
         "summary": "Mark a Rental as returned",
         "description": "Mark the date of return of a rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idRental",
@@ -871,6 +935,20 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter JWT Bearer token **_only_**"
+      },
+      "adminAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter Admin JWT Bearer token with isAdmin:true **_only_**"
+      }
+    },
     "schemas": {
       "Pelicula": {
         "type": "object",
