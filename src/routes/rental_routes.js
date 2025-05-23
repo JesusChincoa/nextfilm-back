@@ -99,6 +99,13 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
         error: "Pelicula no encontrada",
       });
 
+      
+    if(existingFilm.stock <= 0)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "No hay stock disponible",
+    });
+
     let existingRental = await rentalService.searchExistingRental(
       body.userId,
       body.filmId
@@ -110,6 +117,10 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
       });
 
     let rental = await rentalService.createRental(body);
+
+    existingFilm.stock = existingFilm.stock - 1;
+    await filmService.updateFilm(existingFilm._id, existingFilm);
+
     res.status(200).json({
       rentalID: rental._id,
       userId: rental.userId,
@@ -150,6 +161,36 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
         errorNumber: 400,
         message: "Datos incorrectos ingresados",
       });
+
+      let existingUser = await usersService.obtenerUsuarioPorId(body.userId);
+    if (!existingUser)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "Usuario no encontrado",
+      });
+
+    let existingFilm = await filmService.getFilmById(body.filmId);
+    if (!existingFilm)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "Pelicula no encontrada",
+      });
+
+    if(existingFilm.stock <= 0)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "No hay stock disponible",
+    });
+
+
+    if(existingFilm.id !== rental.filmId){ // la nueva pelicula no es la misma que la anterior
+      existingFilm.stock = existingFilm.stock - 1;
+      await filmService.updateFilm(existingFilm._id, existingFilm);
+      let previousFilm = await filmService.getFilmById(rental.filmId);
+      previousFilm.stock = previousFilm.stock + 1;
+      await filmService.updateFilm(previousFilm._id, previousFilm);
+    }
+
     await rentalService.updateRental(rental, body);
     res.status(200).json({
       rentalID: rental._id,
@@ -179,6 +220,10 @@ ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
       error: "Alquiler no encontrado",
     });
 
+  let existingFilm = await filmService.getFilmById(body.filmId);
+
+  existingFilm.stock = existingFilm.stock + 1;
+  await filmService.updateFilm(existingFilm._id, existingFilm);
   res.status(200).json(rental);
 });
 
