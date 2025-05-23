@@ -4,7 +4,7 @@ const films = require("./routes/film_routes");
 const seed = require("./routes/seed_route");
 const users = require("./routes/user_routes");
 const alt_films = require("./routes/film_alternative_routes")
-// const cors = require("cors");
+const cors = require("cors");
 
 mongoose
   .connect("mongodb://localhost:27017/nextfilm")
@@ -15,11 +15,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:4200", // a modificar mas tarde
-//   })
-// );
+app.use(
+  cors()
+);
 app.use("/api", alt_films);
 app.use("/api/auth", users);
 app.use("/api", films);

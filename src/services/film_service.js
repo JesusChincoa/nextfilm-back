@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const schema = Joi.object({
  
   title: Joi.string().required().min(3).max(30),
-  description: Joi.string().min(3).max(30),
+  description: Joi.string(),
   genre: Joi.string().required(),
   release: Joi.date().required(),
   director: Joi.string().required(),
@@ -14,7 +14,9 @@ const schema = Joi.object({
 });
 
  async function getFilms() {
-    return await Film.find();
+    const films = await Film.find();
+    console.log(films);
+    return films;
 }
 
 async function newFilm(body) {
@@ -24,6 +26,7 @@ async function newFilm(body) {
     release: body.release,
     director: body.director,
     duration: body.duration,
+    description: body.description,
     stock: body.stock,
     rental_price: body.rental_price,
   });
@@ -37,6 +40,7 @@ async function newFilm(body) {
     release: body.release,
     director: body.director,
     duration: body.duration,
+    description: body.description,
     stock: body.stock,
     rental_price: body.rental_price,
   });
@@ -65,6 +69,7 @@ async function updateFilmById(id, body) {
     title: body.title,
     genre: body.genre,
     release: body.release,
+    description: body.description,
     director: body.director,
     duration: body.duration,
     stock: body.stock,
