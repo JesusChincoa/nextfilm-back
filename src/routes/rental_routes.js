@@ -9,7 +9,6 @@ const { verificarTokenAdmin, verificarToken } = require("../middleware/auth");
 const schema = Joi.object({
   userId: Joi.string().required(),
   filmId: Joi.string().required(),
-  paid: Joi.boolean().required(),
   price: Joi.number(),
 });
 
@@ -75,7 +74,6 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
     const { error } = schema.validate({
       userId: body.userId,
       filmId: body.filmId,
-      paid: body.paid,
       price: body.price,
     });
 
@@ -99,7 +97,7 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
         error: "Pelicula no encontrada",
       });
 
-      
+
     if(existingFilm.stock <= 0)
       return res.status(400).json({
         errorNumber: 400,
@@ -126,7 +124,6 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
       userId: rental.userId,
       filmId: rental.filmId,
       paid: rental.paid,
-      price: rental.price,
       rentalDate: rental.rentalDate,
       expedtedReturnDate: rental.expectedReturnDate,
       returnDate: rental.returnDate,
@@ -153,7 +150,6 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
     const { error } = schema.validate({
       userId: body.userId,
       filmId: body.filmId,
-      paid: body.paid,
       price: body.price,
     });
     if (error)
@@ -191,17 +187,8 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
       await filmService.updateFilm(previousFilm._id, previousFilm);
     }
 
-    await rentalService.updateRental(rental, body);
-    res.status(200).json({
-      rentalID: rental._id,
-      userId: rental.userId,
-      filmId: rental.filmId,
-      paid: rental.paid,
-      price: rental.price,
-      rentalDate: rental.rentalDate,
-      expectedReturnDate: rental.expectedReturnDate,
-      returnDate: rental.returnDate,
-    });
+    let res = await rentalService.updateRental(rental, body);
+    res.status(200).json(res);
   } catch (err) {
     return res.status(500).json({
       errorNumber: 500,
@@ -225,6 +212,58 @@ ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
   existingFilm.stock = existingFilm.stock + 1;
   await filmService.updateFilm(existingFilm._id, existingFilm);
   res.status(200).json(rental);
+});
+
+
+ruta.post('/newBook/:idFilm', verificarToken, async (req, res) => {
+
+
+  let token = req.get('Authorization');
+  token = token.replace('Bearer ', '')
+
+  const userId = usersService.obtenerUsuarioIdFromToken(token);
+
+  let existingFilm = await filmService.getFilmById(body.filmId);
+    if (!existingFilm)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "Pelicula no encontrada",
+  });
+
+
+  if(existingFilm.stock <= 0)
+    return res.status(400).json({
+      errorNumber: 400,
+      error: "No hay stock disponible",
+  });
+
+  existingFilm.stock = existingFilm.stock - 1;
+  await filmService.updateFilm(existingFilm._id, existingFilm);
+
+  const result = rentalService.createBook(req.params.idFilm, {
+
+    userId: userId,
+    filmId: req.params.idFilm,
+  });
+
+
+  result
+    .then((rental) => {
+      if (!rental) {
+        return res.status(400).json({
+          errorNumber: 400,
+          error: "Alquiler no encontrado",
+        });
+      }
+      res.status(200).json(rental);
+    })
+    .catch((err) =>
+      res.status(500).json({
+        errorNumber: 500,
+        error: "Error en el servidor",
+        err,
+      })
+    );
 });
 
 module.exports = ruta;

@@ -31,6 +31,21 @@ async function obtenerUsuarioPorId(id) {
 
 }
 
+
+async function obtenerUsuarioIdFromToken(token){
+    try {
+        // Verificar y decodificar el token
+        const decoded = jwt.verify(token, 'clave_secreta');
+
+        return decoded._id;
+    }
+    catch (err) {
+        // Token inválido o expirado
+        return null;
+    }
+
+}
+
 async function encontrarToken(token){
     try {
         // Verificar y decodificar el token
@@ -54,4 +69,4 @@ async function encontrarToken(token){
     }
 }
 
-module.exports = {crearUsuario, obtenerUsuario, encontrarToken, obtenerUsuarioPorId}
+module.exports = {obtenerUsuarioIdFromToken, crearUsuario, obtenerUsuario, encontrarToken, obtenerUsuarioPorId}

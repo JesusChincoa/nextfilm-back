@@ -36,6 +36,15 @@ async function createRental(body){
     })
     return await rental.save()
 }
+async function createBook(body){
+    let rental = new Rental({
+        userId: body.userId,
+        filmId: body.filmId,
+        rentalDate: null,
+        expectedReturnDate: null,
+    });
+    return await rental.save()
+}
 
 async function updateRental(rental, body) {
     rental.userId = body.userId;
@@ -60,4 +69,4 @@ async function returnRental(idRental) {
     return await rental.save();
 }
 
-module.exports = {showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId, returnRental}
+module.exports = {createBook, showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId, returnRental}
