@@ -5,24 +5,24 @@ const {verificarToken} = require('../middleware/auth');
 const rute = express.Router();
 
 
-rute.get('/moviesNews', verificarToken, (req, res) => {
+rute.get('/filmNews', verificarToken, (req, res) => {
   
   const LatestFilm = filmService.getLatestFilm();
   const TotalFilms = filmService.getNumberAllFilms();
   const OldestFilm = filmService.getOldestFilm();
-  const Cheapest = filmService.getCheapest();
-  const Expensive = filmService.getExpensive();
-  const Longuest = filmService.getLonguest();
+  const CheapestFilm = filmService.getCheapest();
+  const ExpensiveFilm = filmService.getExpensive();
+  const LonguestFilm = filmService.getLonguest();
     
-    Promise.all([LatestFilm, TotalFilms, OldestFilm,Cheapest,Expensive,Longuest])
+    Promise.all([LatestFilm, TotalFilms, OldestFilm,CheapestFilm,ExpensiveFilm,LonguestFilm])
     .then(([latest, total,oldest,cheap,expensive,longuest]) => {
         const result = {
             LatestFilm: latest,
             TotalFilms: total,
             OldestFilm: oldest,
-            Cheapest: cheap,
-            Longuest: longuest,
-            Expensive: expensive,
+            CheapestFilm: cheap,
+            LonguestFilm: longuest,
+            ExpensiveFilm: expensive,
             
 
 
