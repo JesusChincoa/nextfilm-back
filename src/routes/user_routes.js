@@ -123,4 +123,15 @@ ruta.post('/checkStatus', (req, res) => {
     })
 })
 
+ruta.get('/getUsers', (req, res) => {
+    userService.getUsers().then(users => {
+        res.status(200).json(users)
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        })
+    })
+})
+
 module.exports = ruta;

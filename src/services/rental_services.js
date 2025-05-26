@@ -1,5 +1,8 @@
 const Rental = require('../models/rental_model');
+const RentalDTO = require("../dtos/rentalDto")
 const mongoose = require('mongoose');
+const {getFilmById} = require('./film_service');
+const {obtenerUsuarioPorId} = require('./user_services');
 
 async function showRentals(){
     return await Rental.find().select({__v:0});
@@ -69,4 +72,48 @@ async function returnRental(idRental) {
     return await rental.save();
 }
 
-module.exports = {createBook, showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId, returnRental}
+async function mapRentalToDTO(rental){
+    let [user, film] = await Promise.all([
+            obtenerUsuarioPorId(rental.userId),
+            getFilmById(rental.filmId)
+        ]);
+        if (!user || !film) return null; // Si no se encuentra el usuario o la película, retorna null
+        return new RentalDTO({
+            id: rental._id,
+            userName: user.name,
+            userId: user._id,
+            filmName: film.title,
+            filmId: film._id,
+            price: rental.price,
+            bookDate: rental.bookDate,
+            rentalDate: rental.rentalDate,
+            expectedReturnDate: rental.expectedReturnDate,
+            returnDate: rental.returnDate
+        })
+     
+}
+
+async function rentalToDTO(rentals){
+    const dtos = await Promise.all(rentals.map(async rental => {
+        let [user, film] = await Promise.all([
+            obtenerUsuarioPorId(rental.userId),
+            getFilmById(rental.filmId)
+        ]);
+        if (!user || !film) return null; // Si no se encuentra el usuario o la película, retorna null
+        return new RentalDTO({
+            id: rental._id,
+            userName: user.name,
+            userId: user._id,
+            filmName: film.title,
+            filmId: film._id,
+            price: rental.price,
+            bookDate: rental.bookDate,
+            rentalDate: rental.rentalDate,
+            expectedReturnDate: rental.expectedReturnDate,
+            returnDate: rental.returnDate
+        })
+    }))
+    return dtos
+}
+
+module.exports = {createBook, showRentals, getRentalById, searchExistingRental, updateRental ,createRental, getRentalsByUserId, returnRental, mapRentalToDTO, rentalToDTO}
