@@ -4,6 +4,7 @@ const usersService = require("../services/user_services");
 const filmService = require("../services/film_service");
 const ruta = express.Router();
 const Joi = require("@hapi/joi");
+const RentalDTO = require("../dtos/rentalDto")
 const { verificarTokenAdmin, verificarToken } = require("../middleware/auth");
 
 const schema = Joi.object({
@@ -15,7 +16,15 @@ const schema = Joi.object({
 ruta.get("/getRentals", verificarTokenAdmin, (req, res) => {
   const result = rentalService.showRentals();
   result
-    .then((rentals) => res.status(200).json(rentals))
+    .then((rentals) => rentalService.rentalToDTO(rentals)
+        .then(rentalsDTO => {
+            res.status(200).json(rentalsDTO)
+        }))
+        .catch((err) => res.status(400).json({
+            errorNumber: 400,
+            error: "Error al obtener los alquileres",
+            err
+        }))
     .catch((err) =>
       res.status(500).json({
         errorNumber: 500,
@@ -35,7 +44,15 @@ ruta.get("/getRental/:id", verificarToken, (req, res) => {
           error: "Alquiler no encontrado",
         });
       }
-      res.status(200).json(rental);
+      rentalService.mapRentalToDTO(rental)
+        .then(rentalsDTO => {
+            res.status(200).json(rentalsDTO);
+        })
+        .catch((err) => res.status(400).json({
+            errorNumber: 400,
+            error: "Error al pasar a DTO",
+            err
+        }))
     })
     .catch((err) =>
       res.status(500).json({
@@ -56,7 +73,15 @@ ruta.get("/getRentalsByUser/:userId", verificarToken, (req, res) => {
           error: "Alquiler no encontrado",
         });
       }
-      res.status(200).json(rentals);
+      rentalService.rentalToDTO(rentals)
+        .then(rentalsDTO => {
+            res.status(200).json(rentalsDTO);
+        })
+        .catch((err) => res.status(400).json({
+            errorNumber: 400,
+            error: "Error al obtener los alquileres",
+            err
+        }))
     })
     .catch((err) =>
       res.status(500).json({

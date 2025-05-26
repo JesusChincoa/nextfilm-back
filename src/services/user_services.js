@@ -69,4 +69,8 @@ async function encontrarToken(token){
     }
 }
 
-module.exports = {obtenerUsuarioIdFromToken, crearUsuario, obtenerUsuario, encontrarToken, obtenerUsuarioPorId}
+async function getUsers(){
+    return await Usuario.find().select({_id:1, name:1, email:1});
+}
+
+module.exports = {obtenerUsuarioIdFromToken, crearUsuario, obtenerUsuario, encontrarToken, obtenerUsuarioPorId, getUsers}
