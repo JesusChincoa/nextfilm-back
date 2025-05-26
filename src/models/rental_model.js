@@ -9,13 +9,13 @@ const rentalSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    paid: {
-        type: Boolean,
-        required: true,
-    },
     price: {
         type: Number,
         required: true,
+    },
+    bookDate: {
+        type: Date,
+        default: () => Date.now()
     },
     rentalDate: {
         type: Date,
