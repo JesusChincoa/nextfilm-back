@@ -94,25 +94,7 @@ async function mapRentalToDTO(rental){
 }
 
 async function rentalToDTO(rentals){
-    const dtos = await Promise.all(rentals.map(async rental => {
-        let [user, film] = await Promise.all([
-            obtenerUsuarioPorId(rental.userId),
-            getFilmById(rental.filmId)
-        ]);
-        if (!user || !film) return null; // Si no se encuentra el usuario o la película, retorna null
-        return new RentalDTO({
-            id: rental._id,
-            userName: user.name,
-            userId: user._id,
-            filmName: film.title,
-            filmId: film._id,
-            price: rental.price,
-            bookDate: rental.bookDate,
-            rentalDate: rental.rentalDate,
-            expectedReturnDate: rental.expectedReturnDate,
-            returnDate: rental.returnDate
-        })
-    }))
+    const dtos = await Promise.all(rentals.map(mapRentalToDTO));
     return dtos
 }
 
