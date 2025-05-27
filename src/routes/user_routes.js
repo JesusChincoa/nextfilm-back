@@ -30,7 +30,7 @@ ruta.post('/register', async (req, res) =>{
                 errorNumber: 400,
                 error: 'Usuario ya registrado',
                 user:{
-                    id_user: existingUser._id,
+                    _id: existingUser._id,
                     name: existingUser.name,
                     isAdmin: existingUser.isAdmin,
                     email: existingUser.email,
@@ -45,7 +45,7 @@ ruta.post('/register', async (req, res) =>{
             res.status(201).json({
                 token: token,
                 user:{
-                    id_user: user._id,
+                    _id: user._id,
                     name: user.name,
                     isAdmin: user.isAdmin,
                     email: user.email,
@@ -83,7 +83,7 @@ ruta.post('/login', (req, res) => {
         res.status(200).json({
             token: token,
             user:{
-                id_user: user._id,
+                _id: user._id,
                 name: user.name,
                 isAdmin: user.isAdmin,
                 email: user.email,
@@ -109,7 +109,7 @@ ruta.post('/checkStatus', (req, res) => {
         res.status(200).json({
             token: token,
             user:{
-                id_user: user._id,
+                _id: user._id,
                 name: user.name,
                 isAdmin: user.isAdmin,
                 email: user.email,
