@@ -1,5 +1,5 @@
-function RentalDTO({ id, userName, userId, filmName, filmId, price, bookDate, rentalDate, expectedReturnDate, returnDate }) {
-  this.id = id;
+function RentalDTO({ _id, userName, userId, filmName, filmId, price, bookDate, rentalDate, expectedReturnDate, returnDate }) {
+  this._id = _id;
   this.userName = userName;
   this.userId = userId;
   this.filmName = filmName;
