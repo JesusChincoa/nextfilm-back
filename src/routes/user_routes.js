@@ -8,7 +8,7 @@ const Joi = require('@hapi/joi');
 const schema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
-    password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/).required(),
+    password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/).required(), //Mayuscula, minuscula, numero y caracter especial ($@$!%*?&)
 })
 
 ruta.post('/register', async (req, res) =>{
