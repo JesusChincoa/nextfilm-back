@@ -4,7 +4,7 @@ const usersService = require("../services/user_services");
 const filmService = require("../services/film_service");
 const ruta = express.Router();
 const Joi = require("@hapi/joi");
-const RentalDTO = require("../dtos/rentalDto")
+const RentalDTO = require("../dtos/rentalDto");
 const { verificarTokenAdmin, verificarToken } = require("../middleware/auth");
 
 const schema = Joi.object({
@@ -16,15 +16,18 @@ const schema = Joi.object({
 ruta.get("/getRentals", verificarTokenAdmin, (req, res) => {
   const result = rentalService.showRentals();
   result
-    .then((rentals) => rentalService.rentalToDTO(rentals)
-        .then(rentalsDTO => {
-            res.status(200).json(rentalsDTO)
-        }))
-        .catch((err) => res.status(400).json({
-            errorNumber: 400,
-            error: "Error al obtener los alquileres",
-            err
-        }))
+    .then((rentals) =>
+      rentalService.rentalToDTO(rentals).then((rentalsDTO) => {
+        res.status(200).json(rentalsDTO);
+      })
+    )
+    .catch((err) =>
+      res.status(400).json({
+        errorNumber: 400,
+        error: "Error al obtener los alquileres",
+        err,
+      })
+    )
     .catch((err) =>
       res.status(500).json({
         errorNumber: 500,
@@ -44,15 +47,18 @@ ruta.get("/getRental/:id", verificarToken, (req, res) => {
           error: "Alquiler no encontrado",
         });
       }
-      rentalService.mapRentalToDTO(rental)
-        .then(rentalsDTO => {
-            res.status(200).json(rentalsDTO);
+      rentalService
+        .mapRentalToDTO(rental)
+        .then((rentalsDTO) => {
+          res.status(200).json(rentalsDTO);
         })
-        .catch((err) => res.status(400).json({
+        .catch((err) =>
+          res.status(400).json({
             errorNumber: 400,
             error: "Error al pasar a DTO",
-            err
-        }))
+            err,
+          })
+        );
     })
     .catch((err) =>
       res.status(500).json({
@@ -73,15 +79,18 @@ ruta.get("/getRentalsByUser/:userId", verificarToken, (req, res) => {
           error: "Alquiler no encontrado",
         });
       }
-      rentalService.rentalToDTO(rentals)
-        .then(rentalsDTO => {
-            res.status(200).json(rentalsDTO);
+      rentalService
+        .rentalToDTO(rentals)
+        .then((rentalsDTO) => {
+          res.status(200).json(rentalsDTO);
         })
-        .catch((err) => res.status(400).json({
+        .catch((err) =>
+          res.status(400).json({
             errorNumber: 400,
             error: "Error al obtener los alquileres",
-            err
-        }))
+            err,
+          })
+        );
     })
     .catch((err) =>
       res.status(500).json({
@@ -122,12 +131,11 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
         error: "Pelicula no encontrada",
       });
 
-
-    if(existingFilm.stock <= 0)
+    if (existingFilm.stock <= 0)
       return res.status(400).json({
         errorNumber: 400,
         error: "No hay stock disponible",
-    });
+      });
 
     let existingRental = await rentalService.searchExistingRental(
       body.userId,
@@ -175,7 +183,7 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
         message: "Datos incorrectos ingresados",
       });
 
-      let existingUser = await usersService.obtenerUsuarioPorId(body.userId);
+    let existingUser = await usersService.obtenerUsuarioPorId(body.userId);
     if (!existingUser)
       return res.status(400).json({
         errorNumber: 400,
@@ -189,14 +197,24 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
         error: "Pelicula no encontrada",
       });
 
-    if(existingFilm.stock <= 0)
+    if (existingFilm.stock <= 0)
       return res.status(400).json({
         errorNumber: 400,
         error: "No hay stock disponible",
-    });
+      });
 
+    let existingRental = await rentalService.searchExistingRental(
+      body.userId,
+      body.filmId
+    );
+    if (existingRental)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "El usuario ya ha alquilado la pelicula",
+      });
 
-    if(existingFilm.id !== rental.filmId){ // la nueva pelicula no es la misma que la anterior
+    if (existingFilm.id !== rental.filmId) {
+      // la nueva pelicula no es la misma que la anterior
       existingFilm.stock = existingFilm.stock - 1;
       await filmService.updateFilm(existingFilm._id, existingFilm);
       let previousFilm = await filmService.getFilmById(rental.filmId);
@@ -231,56 +249,49 @@ ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
   res.status(200).json(rental);
 });
 
+ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
+  try {
+    let token = req.get("Authorization");
+    token = token.replace("Bearer ", "");
 
-ruta.post('/newBook/:idFilm', verificarToken, async (req, res) => {
+    const userId = await usersService.obtenerUsuarioIdFromToken(token);
 
-
-  let token = req.get('Authorization');
-  token = token.replace('Bearer ', '')
-
-  const userId = usersService.obtenerUsuarioIdFromToken(token);
-
-  let existingFilm = await filmService.getFilmById(body.filmId);
+    let existingFilm = await filmService.getFilmById(req.params.idFilm);
     if (!existingFilm)
       return res.status(400).json({
         errorNumber: 400,
         error: "Pelicula no encontrada",
-  });
+      });
 
+    if (existingFilm.stock <= 0)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "No hay stock disponible",
+      });
 
-  if(existingFilm.stock <= 0)
-    return res.status(400).json({
-      errorNumber: 400,
-      error: "No hay stock disponible",
-  });
-
-  existingFilm.stock = existingFilm.stock - 1;
-  await filmService.updateFilm(existingFilm._id, existingFilm);
-
-  const result = rentalService.createBook(req.params.idFilm, {
-
-    userId: userId,
-    filmId: req.params.idFilm,
-  });
-
-
-  result
-    .then((rental) => {
-      if (!rental) {
-        return res.status(400).json({
-          errorNumber: 400,
-          error: "Alquiler no encontrado",
-        });
-      }
-      res.status(200).json(rental);
-    })
-    .catch((err) =>
-      res.status(500).json({
-        errorNumber: 500,
-        error: "Error en el servidor",
-        err,
-      })
+    let existingRental = await rentalService.searchExistingRental(
+      userId,
+      req.params.idFilm
     );
+    if (existingRental)
+      return res.status(400).json({
+        errorNumber: 400,
+        error: "El usuario ya ha alquilado/reservado la pelicula",
+      });
+
+    existingFilm.stock = existingFilm.stock - 1;
+    await filmService.updateFilmById(existingFilm._id, existingFilm);
+
+    const result = await rentalService.createBook(userId, req.params.idFilm);
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({
+      errorNumber: 500,
+      error: "Error en el servidor",
+      err,
+    });
+  }
 });
 
 module.exports = ruta;

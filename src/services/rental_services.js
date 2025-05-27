@@ -39,10 +39,10 @@ async function createRental(body){
     })
     return await rental.save()
 }
-async function createBook(body){
+async function createBook(userId, filmId){
     let rental = new Rental({
-        userId: body.userId,
-        filmId: body.filmId,
+        userId: userId,
+        filmId: filmId,
         rentalDate: null,
         expectedReturnDate: null,
     });
@@ -79,7 +79,7 @@ async function mapRentalToDTO(rental){
         ]);
         if (!user || !film) return null; // Si no se encuentra el usuario o la película, retorna null
         return new RentalDTO({
-            id: rental._id,
+            _id: rental._id,
             userName: user.name,
             userId: user._id,
             filmName: film.title,
