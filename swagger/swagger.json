@@ -602,6 +602,53 @@
         }
       }
     },
+    "/auth/getUsers": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get all Users",
+        "description": "Return all the users of the videoclub",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/getRental/{idRental}": {
       "get": {
         "tags": ["Rentals"],
@@ -1016,7 +1063,7 @@
       }
     },
     "schemas": {
-      "Pelicula": {
+      "Film": {
         "type": "object",
         "properties": {
           "filmId": {
@@ -1058,7 +1105,7 @@
           }
         }
       },
-      "PeliculaDTO": {
+      "FilmDTO": {
         "type": "object",
         "properties": {
           "title": {
@@ -1120,7 +1167,7 @@
       "Rental": {
         "type": "object",
         "properties": {
-          "renralID": {
+          "rentalID": {
             "type": "string",
             "example": "324dfd2321..."
           },
@@ -1128,9 +1175,17 @@
             "type": "string",
             "example": "324dfd2321..."
           },
+          "userName": {
+            "type": "string",
+            "example": "Francisco Perez"
+          },
           "filmId": {
             "type": "string",
             "example": "324dfd2321..."
+          },
+          "filmName": {
+            "type": "string",
+            "example": "El Padrino"
           },
           "price": {
             "type": "number",
