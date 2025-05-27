@@ -13,6 +13,7 @@ const schema = Joi.object({
   price: Joi.number(),
 });
 
+//Devuelve todos los alquileres
 ruta.get("/getRentals", verificarTokenAdmin, (req, res) => {
   const result = rentalService.showRentals();
   result
@@ -37,6 +38,7 @@ ruta.get("/getRentals", verificarTokenAdmin, (req, res) => {
     );
 });
 
+//Devuelve un alquiler por id que recibe por parametro
 ruta.get("/getRental/:id", verificarToken, (req, res) => {
   const result = rentalService.getRentalById(req.params.id);
   result
@@ -69,6 +71,7 @@ ruta.get("/getRental/:id", verificarToken, (req, res) => {
     );
 });
 
+//Devuelve todos los alquileres de un usuario por id que recibe por parametro
 ruta.get("/getRentalsByUser/:userId", verificarToken, (req, res) => {
   const result = rentalService.getRentalsByUserId(req.params.userId);
   result
@@ -101,6 +104,7 @@ ruta.get("/getRentalsByUser/:userId", verificarToken, (req, res) => {
     );
 });
 
+//Crea un nuevo alquiler recibiendo por body el id del usuario, el id de la pelicula, el precio y si está pagado o no
 ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
   let body = req.body;
 
@@ -147,10 +151,12 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
         error: "El usuario ya ha alquilado la pelicula",
       });
 
-    let rental = await rentalService.createRental(body);
 
     existingFilm.stock = existingFilm.stock - 1;
-    await filmService.updateFilm(existingFilm._id, existingFilm);
+    await filmService.updateFilmById(existingFilm._id, existingFilm);
+
+    let rental = await rentalService.createRental(body);
+
 
     res.status(200).json(rental);
   } catch (err) {
@@ -162,6 +168,7 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
   }
 });
 
+//Actualiza un alquiler recibiendo por body el id del usuario, el id de la pelicula, el precio, si está pagado o no y la fecha de devolución nueva.
 ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
   let rental = await rentalService.getRentalById(req.params.id);
   let body = req.body;
@@ -216,14 +223,14 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
     if (existingFilm.id !== rental.filmId) {
       // la nueva pelicula no es la misma que la anterior
       existingFilm.stock = existingFilm.stock - 1;
-      await filmService.updateFilm(existingFilm._id, existingFilm);
+      await filmService.updateFilmById(existingFilm._id, existingFilm);
       let previousFilm = await filmService.getFilmById(rental.filmId);
       previousFilm.stock = previousFilm.stock + 1;
-      await filmService.updateFilm(previousFilm._id, previousFilm);
+      await filmService.updateFilmById(previousFilm._id, previousFilm);
     }
 
-    let res = await rentalService.updateRental(rental, body);
-    res.status(200).json(res);
+    let result = await rentalService.updateRental(rental, body);
+    res.status(200).json(result);
   } catch (err) {
     return res.status(500).json({
       errorNumber: 500,
@@ -233,6 +240,7 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
   }
 });
 
+//Recibe un id de alquiler por parametro y devuelve el alquiler, además de actualizar el stock de la película.
 ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
   let rental = await rentalService.returnRental(req.params.id);
 
@@ -242,12 +250,13 @@ ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
       error: "Alquiler no encontrado",
     });
 
-  let existingFilm = await filmService.getFilmById(body.filmId);
+  let existingFilm = await filmService.getFilmById(rental.filmId);
 
   existingFilm.stock = existingFilm.stock + 1;
-  await filmService.updateFilm(existingFilm._id, existingFilm);
+  await filmService.updateFilmById(existingFilm._id, existingFilm);
   res.status(200).json(rental);
 });
+
 
 ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
   try {
@@ -257,7 +266,8 @@ ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
     const userId = await usersService.obtenerUsuarioIdFromToken(token);
 
     let existingFilm = await filmService.getFilmById(req.params.idFilm);
-    if (!existingFilm)
+
+
       return res.status(400).json({
         errorNumber: 400,
         error: "Pelicula no encontrada",
@@ -281,6 +291,7 @@ ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
 
     existingFilm.stock = existingFilm.stock - 1;
     await filmService.updateFilmById(existingFilm._id, existingFilm);
+
 
     const result = await rentalService.createBook(userId, req.params.idFilm);
 

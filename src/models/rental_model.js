@@ -10,7 +10,7 @@ const rentalSchema = new mongoose.Schema({
         required: true
     },
     price: {
-        type: Number,
+        type: Number
     },
     bookDate: {
         type: Date,
