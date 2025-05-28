@@ -45,6 +45,7 @@ async function createBook(userId, filmId){
         filmId: filmId,
         rentalDate: null,
         expectedReturnDate: null,
+
     });
     return await rental.save()
 }
@@ -57,6 +58,9 @@ async function updateRental(rental, body) {
     rental.rentalDate = body.rentalDate;
     rental.expectedReturnDate = body.expectedReturnDate;
 
+    if (body.returnDate) {
+        rental.returnDate = new Date(body.returnDate); 
+    }
     return await rental.save();
 }
 

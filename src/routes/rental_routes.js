@@ -152,8 +152,8 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
       });
 
 
-    existingFilm.stock = existingFilm.stock - 1;
-    await filmService.updateFilmById(existingFilm._id, existingFilm);
+     existingFilm.stock = existingFilm.stock - 1;
+     await filmService.updateFilmById(existingFilm._id, existingFilm);
 
     let rental = await rentalService.createRental(body);
 
@@ -229,8 +229,8 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
       await filmService.updateFilmById(previousFilm._id, previousFilm);
     }
 
-    let result = await rentalService.updateRental(rental, body);
-    res.status(200).json(result);
+    let updatedRental = await rentalService.updateRental(rental, body);
+    res.status(200).json(updatedRental);
   } catch (err) {
     return res.status(500).json({
       errorNumber: 500,
