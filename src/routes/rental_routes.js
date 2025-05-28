@@ -145,7 +145,7 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
       body.userId,
       body.filmId
     );
-    if (existingRental)
+    if (existingRental && existingRental.returnDate === null)
       return res.status(400).json({
         errorNumber: 400,
         error: "El usuario ya ha alquilado la pelicula",
@@ -254,7 +254,8 @@ ruta.put("/returnRental/:id", verificarTokenAdmin, async (req, res) => {
 
   existingFilm.stock = existingFilm.stock + 1;
   await filmService.updateFilmById(existingFilm._id, existingFilm);
-  res.status(200).json(rental);
+  let rentalDTO = await rentalService.mapRentalToDTO(rental);
+  res.status(200).json(rentalDTO);
 });
 
 
@@ -267,7 +268,7 @@ ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
 
     let existingFilm = await filmService.getFilmById(req.params.idFilm);
 
-
+    if (!existingFilm)
       return res.status(400).json({
         errorNumber: 400,
         error: "Pelicula no encontrada",
