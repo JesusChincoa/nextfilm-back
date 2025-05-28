@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+//Crea un nuevo usuario y lo guarda en la base de datos
 async function crearUsuario(body){
     let usuario = new Usuario({
         name: body.name,
@@ -13,6 +14,7 @@ async function crearUsuario(body){
     return await usuario.save()
 }
 
+//Obtiene un usuario por su email
 async function obtenerUsuario(email){
     let usuario = await Usuario.findOne({email: email})
     .select({_id:1, name:1, isAdmin:1, email:1, password:1})
@@ -20,6 +22,7 @@ async function obtenerUsuario(email){
     return usuario
 }
 
+//Obtiene un usuario por su id, comprobando que el id es válido
 async function obtenerUsuarioPorId(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return null; // Así devuelves null y puedes responder con 400 en la ruta
@@ -31,7 +34,7 @@ async function obtenerUsuarioPorId(id) {
 
 }
 
-
+//Obtiene el id del usuario a partir del token JWT
 async function obtenerUsuarioIdFromToken(token){
     try {
         // Verificar y decodificar el token
@@ -46,6 +49,7 @@ async function obtenerUsuarioIdFromToken(token){
 
 }
 
+//Busca un usuario por su token, devuelve el usuario si es válido o null si no lo es
 async function encontrarToken(token){
     try {
         // Verificar y decodificar el token
@@ -69,6 +73,7 @@ async function encontrarToken(token){
     }
 }
 
+//Devuelve todos los usuarios con su id, nombre y email
 async function getUsers(){
     return await Usuario.find().select({_id:1, name:1, email:1});
 }

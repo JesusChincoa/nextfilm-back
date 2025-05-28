@@ -11,6 +11,7 @@ const schema = Joi.object({
     password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/).required(), //Mayuscula, minuscula, numero y caracter especial ($@$!%*?&)
 })
 
+//Endpoint para crear un nuevo usuario en la base de datos.
 ruta.post('/register', async (req, res) =>{
     let body = req.body;
 
@@ -63,6 +64,7 @@ ruta.post('/register', async (req, res) =>{
 
 })
 
+//Endpoint para iniciar sesión en la aplicación
 ruta.post('/login', (req, res) => {
     let body = req.body;
 
@@ -96,6 +98,7 @@ ruta.post('/login', (req, res) => {
     })
 })
 
+//Endpoint que compruueba el estado del token para ver si el usuario sigue activo
 ruta.post('/checkStatus', (req, res) => {
     let token = req.body.token
 
@@ -123,6 +126,7 @@ ruta.post('/checkStatus', (req, res) => {
     })
 })
 
+//Endpoint para obtener todos los usuarios
 ruta.get('/getUsers', (req, res) => {
     userService.getUsers().then(users => {
         res.status(200).json(users)

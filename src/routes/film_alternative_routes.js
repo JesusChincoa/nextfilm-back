@@ -4,7 +4,7 @@ const filmService = require('../services/film_service');
 const {verificarToken} = require('../middleware/auth');
 const rute = express.Router();
 
-
+//Endpoint que obtiene todas las noticias de películas que se muestran en la página principal
 rute.get('/filmNews', verificarToken, (req, res) => {
   
   const LatestFilm = filmService.getLatestFilm();
