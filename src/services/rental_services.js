@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const {getFilmById} = require('./film_service');
 const {obtenerUsuarioPorId} = require('./user_services');
 
+//Devuelve todos los alquileres
 async function showRentals(){
     return await Rental.find().select({__v:0});
 }
 
+//Devuelve un alquiler por id, comprobando que el id es válido
 async function getRentalById(id){
     if (!mongoose.Types.ObjectId.isValid(id)) {
             return null; // Así devuelves null y puedes responder con 400 en la ruta
@@ -16,6 +18,7 @@ async function getRentalById(id){
     
 }
 
+//Devuelve todos los alquileres de un usuario por su id, comprobando que el id es válido
 async function getRentalsByUserId(userId){
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return null; // Así devuelves null y puedes responder con 400 en la ruta
@@ -23,13 +26,14 @@ async function getRentalsByUserId(userId){
     return await Rental.find({userId: userId}).select({__v:0});
 }
 
+//Busca un alquiler existente por userId y filmId
 async function searchExistingRental(userId, filmId){
-    let rental = await Rental.findOne({userId: userId, filmId: filmId})
+    let rental = await Rental.find({userId: userId, filmId: filmId})
     .select({__v:0})
     return rental
 }
 
-
+//Crea un nuevo alquiler
 async function createRental(body){
     let rental = new Rental({
         userId: body.userId,
@@ -39,17 +43,20 @@ async function createRental(body){
     })
     return await rental.save()
 }
-async function createBook(userId, filmId){
+
+//Crea una nueva reserva
+async function createBook(userId, filmId,price ){
     let rental = new Rental({
         userId: userId,
         filmId: filmId,
+        price: price,
         rentalDate: null,
-        expectedReturnDate: null,
-
+        expectedReturnDate: null
     });
     return await rental.save()
 }
 
+//Actualiza un alquiler existente
 async function updateRental(rental, body) {
     rental.userId = body.userId;
     rental.filmId = body.filmId;
@@ -64,6 +71,7 @@ async function updateRental(rental, body) {
     return await rental.save();
 }
 
+//Añade la fecha de devolución a un alquiler existente que se envia por parametro, indicando que ya se ha devuelto la película.
 async function returnRental(idRental) {
     let rental = await Rental.findById(idRental);
 
@@ -76,6 +84,7 @@ async function returnRental(idRental) {
     return await rental.save();
 }
 
+//Recibe un alquiler y lo mapea a un DTO, añadiendo el nombre del usuario y de la película por sus ids.
 async function mapRentalToDTO(rental){
     let [user, film] = await Promise.all([
             obtenerUsuarioPorId(rental.userId),
@@ -97,6 +106,7 @@ async function mapRentalToDTO(rental){
      
 }
 
+//Mapea un array de alquileres a un array de DTOs
 async function rentalToDTO(rentals){
     const dtos = await Promise.all(rentals.map(mapRentalToDTO));
     return dtos

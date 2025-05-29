@@ -6,6 +6,7 @@ const ruta = express.Router();
 const Joi = require("@hapi/joi");
 const RentalDTO = require("../dtos/rentalDto");
 const { verificarTokenAdmin, verificarToken } = require("../middleware/auth");
+const e = require("express");
 
 const schema = Joi.object({
   userId: Joi.string().required(),
@@ -141,11 +142,13 @@ ruta.post("/newRental", verificarTokenAdmin, async (req, res) => {
         error: "No hay stock disponible",
       });
 
-    let existingRental = await rentalService.searchExistingRental(
+    let allRentals = await rentalService.searchExistingRental(
       body.userId,
       body.filmId
     );
-    if (existingRental && existingRental.returnDate === null)
+
+    let existingRental = allRentals.find(r => r.returnDate === null);
+    if (existingRental)
       return res.status(400).json({
         errorNumber: 400,
         error: "El usuario ya ha alquilado la pelicula",
@@ -210,16 +213,20 @@ ruta.put("/updateRental/:id", verificarTokenAdmin, async (req, res) => {
         error: "No hay stock disponible",
       });
 
-    let existingRental = await rentalService.searchExistingRental(
+    if(rental.filmId === existingFilm._id && rental.userId === existingUser._id){
+      let allRentals = await rentalService.searchExistingRental(
       body.userId,
       body.filmId
     );
+
+    let existingRental = allRentals.find(r => r.returnDate === null);
     if (existingRental)
       return res.status(400).json({
         errorNumber: 400,
         error: "El usuario ya ha alquilado la pelicula",
       });
 
+    }
     if (existingFilm.id !== rental.filmId) {
       // la nueva pelicula no es la misma que la anterior
       existingFilm.stock = existingFilm.stock - 1;
@@ -280,21 +287,22 @@ ruta.post("/newBook/:idFilm", verificarToken, async (req, res) => {
         error: "No hay stock disponible",
       });
 
-    let existingRental = await rentalService.searchExistingRental(
+    let allRentals = await rentalService.searchExistingRental(
       userId,
       req.params.idFilm
     );
+
+    let existingRental = allRentals.find(r => r.returnDate === null);
     if (existingRental)
       return res.status(400).json({
         errorNumber: 400,
-        error: "El usuario ya ha alquilado/reservado la pelicula",
+        error: "El usuario ya ha reservado/alquilado la pelicula",
       });
 
     existingFilm.stock = existingFilm.stock - 1;
     await filmService.updateFilmById(existingFilm._id, existingFilm);
 
-
-    const result = await rentalService.createBook(userId, req.params.idFilm);
+    const result = await rentalService.createBook(userId, req.params.idFilm, existingFilm.rental_price);
 
     return res.status(200).json(result);
   } catch (err) {
