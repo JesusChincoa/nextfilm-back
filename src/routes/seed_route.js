@@ -55,47 +55,14 @@ async function seedDatabase() {
 
   const seedFilms = [
   {
-    title: "Inception",
-    description: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
-    genre: "sci-fi",
-    release: new Date("2010-07-16"),
-    director: "Christopher Nolan",
-    duration: 148,
+    title: "Mad Max: Fury Road",
+    description: "In a post-apocalyptic wasteland, Max teams up with a mysterious woman to flee from a cult leader and his army.",
+    genre: "action",
+    release: new Date("2015-05-15"),
+    director: "George Miller",
+    duration: 120,
     stock: 10,
-    rental_price: 3.99,
-    isActive: true
-  },
-  {
-    title: "The Godfather",
-    description: "The aging patriarch of an organized crime dynasty transfers control to his reluctant son.",
-    genre: "drama",
-    release: new Date("1972-03-24"),
-    director: "Francis Ford Coppola",
-    duration: 175,
-    stock: 5,
-    rental_price: 4.99,
-    isActive: true
-  },
-  {
-    title: "Interstellar",
-    description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-    genre: "sci-fi",
-    release: new Date("2014-11-07"),
-    director: "Christopher Nolan",
-    duration: 169,
-    stock: 7,
     rental_price: 4.49,
-    isActive: true
-  },
-  {
-    title: "Shaun of the Dead",
-    description: "A man's uneventful life is disrupted by a zombie apocalypse in this horror-comedy classic.",
-    genre: "comedy",
-    release: new Date("2004-04-09"),
-    director: "Edgar Wright",
-    duration: 99,
-    stock: 6,
-    rental_price: 3.49,
     isActive: true
   },
   {
@@ -110,18 +77,61 @@ async function seedDatabase() {
     isActive: true
   },
   {
-    title: "Frozen",
-    description: "When a queen with icy powers accidentally curses her kingdom with eternal winter, her sister sets out to find her.",
-    genre: "animated",
-    release: new Date("2013-11-27"),
-    director: "Chris Buck & Jennifer Lee",
-    duration: 102,
-    stock: 9,
+    title: "The Grand Budapest Hotel",
+    description: "A comedy about a legendary concierge at a famous European hotel and his adventures with a lobby boy.",
+    genre: "comedy",
+    release: new Date("2014-03-28"),
+    director: "Wes Anderson",
+    duration: 99,
+    stock: 7,
     rental_price: 3.49,
+    isActive: true
+  },
+  {
+    title: "Interstellar",
+    description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    genre: "sci-fi",
+    release: new Date("2014-11-07"),
+    director: "Christopher Nolan",
+    duration: 169,
+    stock: 6,
+    rental_price: 4.99,
+    isActive: true
+  },
+  {
+    title: "The Shawshank Redemption",
+    description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of decency.",
+    genre: "drama",
+    release: new Date("1994-09-23"),
+    director: "Frank Darabont",
+    duration: 142,
+    stock: 10,
+    rental_price: 4.49,
+    isActive: true
+  },
+  {
+    title: "Coco",
+    description: "Aspiring musician Miguel enters the Land of the Dead to find his great-great-grandfather, a legendary singer.",
+    genre: "animated",
+    release: new Date("2017-11-22"),
+    director: "Lee Unkrich",
+    duration: 105,
+    stock: 9,
+    rental_price: 3.99,
+    isActive: true
+  },
+  {
+    title: "La La Land",
+    description: "A jazz musician and an aspiring actress fall in love while pursuing their dreams in Los Angeles.",
+    genre: "musical",
+    release: new Date("2016-12-09"),
+    director: "Damien Chazelle",
+    duration: 128,
+    stock: 5,
+    rental_price: 4.29,
     isActive: true
   }
 ];
-
 
 
 
