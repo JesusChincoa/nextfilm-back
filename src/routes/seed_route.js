@@ -53,47 +53,98 @@ async function seedDatabase() {
     "musical",
   ];
 
+  const seedFilms = [
+  {
+    title: "Inception",
+    description: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
+    genre: "sci-fi",
+    release: new Date("2010-07-16"),
+    director: "Christopher Nolan",
+    duration: 148,
+    stock: 10,
+    rental_price: 3.99,
+    isActive: true
+  },
+  {
+    title: "The Godfather",
+    description: "The aging patriarch of an organized crime dynasty transfers control to his reluctant son.",
+    genre: "drama",
+    release: new Date("1972-03-24"),
+    director: "Francis Ford Coppola",
+    duration: 175,
+    stock: 5,
+    rental_price: 4.99,
+    isActive: true
+  },
+  {
+    title: "Interstellar",
+    description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    genre: "sci-fi",
+    release: new Date("2014-11-07"),
+    director: "Christopher Nolan",
+    duration: 169,
+    stock: 7,
+    rental_price: 4.49,
+    isActive: true
+  },
+  {
+    title: "Shaun of the Dead",
+    description: "A man's uneventful life is disrupted by a zombie apocalypse in this horror-comedy classic.",
+    genre: "comedy",
+    release: new Date("2004-04-09"),
+    director: "Edgar Wright",
+    duration: 99,
+    stock: 6,
+    rental_price: 3.49,
+    isActive: true
+  },
+  {
+    title: "The Conjuring",
+    description: "Paranormal investigators help a family terrorized by a dark presence in their farmhouse.",
+    genre: "horror",
+    release: new Date("2013-07-19"),
+    director: "James Wan",
+    duration: 112,
+    stock: 8,
+    rental_price: 3.99,
+    isActive: true
+  },
+  {
+    title: "Frozen",
+    description: "When a queen with icy powers accidentally curses her kingdom with eternal winter, her sister sets out to find her.",
+    genre: "animated",
+    release: new Date("2013-11-27"),
+    director: "Chris Buck & Jennifer Lee",
+    duration: 102,
+    stock: 9,
+    rental_price: 3.49,
+    isActive: true
+  }
+];
 
 
 
-  for (let i = 0; i < 10; i++) {
-    // Generate a random release date between 1990 and today
-    const start = new Date(1990, 0, 1).getTime();
-    const end = new Date().getTime();
-    const randomRelease = new Date(start + Math.random() * (end - start));
 
-    await filmService.newFilm({
-      title: `Film ${i}`,
-      description: `Description for Film ${i}`,
-      genre: `${genres[i % genres.length]}`,
-      release: randomRelease,
-      director: "Director Name",
-      duration: 60 + Math.floor(Math.random() * 120), // Random duration between 60 and 180 minutes
-      stock: 10 - i,
-      rental_price: 5.99 + Math.floor(Math.random() * 10),
-      isActive: true,
-    });
+
+  for (let i = 0; i < seedFilms.length; i++) {
+    await filmService.newFilm(seedFilms[i]);
   }
 
-  for (let i = 0; i < 10; i++) {
+
+  await userService.crearUsuario({
+    name: `admin`,
+    email: `admin@admin.com`,
+    password: `admin`,
+    isAdmin: true,
+  });
     await userService.crearUsuario({
-      name: `User ${i}`,
-      email: `email${i}@email.com`,
-      password: `password${i}`,
-      isAdmin: i % 2 === 0,
-    });
-  }
+    name: `user`,
+    email: `user@email.com`,
+    password: `user`,
+    isAdmin: false,
+  });
+  
 
-  for (let i = 0; i < 10; i++) {
-    let user = await Usuario.findOne({ email: `email${i}@email.com` });
-    let film = await Film.findOne({ title: `Film ${i}` });
-    await rentalService.createRental({
-      userId: user._id,
-      filmId: film._id,
-      paid: i % 2 === 0,
-      price: 5.99 + i,
-    });
-  }
 }
 
 async function deleteRental(id) {
