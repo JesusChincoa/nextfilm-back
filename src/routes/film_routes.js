@@ -27,6 +27,12 @@ rute.get('/getFilm/:id', verificarToken,  (req, res) => {
           message: 'Movie not found',
         });
       }
+      if(!film.isActive){
+        return res.status(400).json({
+          errorNumber: 400,
+          message: 'Movie not available',
+        });
+      }
       res.status(200).json(film);
     })
     .catch((err) =>

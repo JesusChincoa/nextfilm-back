@@ -15,7 +15,7 @@ const schema = Joi.object({
 
 //Devuelve todas las películas
  async function getFilms() {
-    const films = await Film.find();
+    const films = await Film.find({ isActive:true }).select({ __v: 0 });
     console.log(films);
     return films;
 }
@@ -108,7 +108,11 @@ async function deleteFromID(id) {
     return null; 
   }
 
-  return await Film.findByIdAndDelete({_id:id});
+  //return await Film.findByIdAndDelete({_id:id});
+  return await Film.findByIdAndUpdate(id, {
+    $set:{isActive: false}
+  }, { new: true, projection: { __v: 0 }
+  })
 }
 
 //Devuelve la película con la fecha de lanzamiento más reciente
