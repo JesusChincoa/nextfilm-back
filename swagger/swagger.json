@@ -5,6 +5,11 @@
     "version": "1.0.0",
     "description": "API para gestionar el catálogo de películas del videoclub"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
   "tags": [
     {
       "name": "Films",
@@ -13,6 +18,14 @@
     {
       "name": "Auth",
       "description": "EndPoints for Authentication"
+    },
+    {
+      "name": "Rentals",
+      "description": "EndPoints for Rentals"
+    },
+    {
+      "name": "Database",
+      "description": "EndPoint for Initializing the database"
     }
   ],
   "paths": {
@@ -21,6 +34,11 @@
         "tags": ["Films"],
         "summary": "Get all Films",
         "description": "Return all the films of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Films List",
@@ -29,18 +47,8 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pelicula"
+                    "$ref": "#/components/schemas/Film"
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -73,6 +81,11 @@
         "tags": ["Films"],
         "summary": "Get a Film",
         "description": "Return a concrete film of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -91,7 +104,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pelicula"
+                  "$ref": "#/components/schemas/Film"
                 }
               }
             }
@@ -134,6 +147,11 @@
         "tags": ["Films"],
         "summary": "Update a Film",
         "description": "Return the Film updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -151,7 +169,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PeliculaDTO"
+                "$ref": "#/components/schemas/FilmDTO"
               }
             }
           }
@@ -162,7 +180,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pelicula"
+                  "$ref": "#/components/schemas/Film"
                 }
               }
             }
@@ -205,12 +223,17 @@
         "tags": ["Films"],
         "summary": "Create a new Film",
         "description": "Return the new Film",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PeliculaDTO"
+                "$ref": "#/components/schemas/FilmDTO"
               }
             }
           }
@@ -221,7 +244,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pelicula"
+                  "$ref": "#/components/schemas/Film"
                 }
               }
             }
@@ -259,12 +282,16 @@
         }
       }
     },
-
     "/deleteFilm/{idFilm}": {
       "delete": {
         "tags": ["Films"],
         "summary": "Delete a Film",
         "description": "Return a 200 status if deletion succeded",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "idFilm",
@@ -314,7 +341,45 @@
         }
       }
     },
-    "/login": {
+    "/filmNews": {
+      "get": {
+        "tags": ["Films"],
+        "summary": "Get News from the VideoClub Films",
+        "description": "Get News from the VideoClub Films",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Film Deleted"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "Login",
@@ -364,7 +429,7 @@
       }
     },
 
-    "/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "Register",
@@ -381,7 +446,7 @@
         },
         "responses": {
           "201": {
-            "description": "Login Succeded",
+            "description": "Register Succeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -414,7 +479,7 @@
       }
     },
 
-    "/checkStatus": {
+    "/auth/checkStatus": {
       "post": {
         "tags": ["Auth"],
         "summary": "Check Token",
@@ -462,34 +527,567 @@
           }
         }
       }
+    },
+    "/seed": {
+      "post": {
+        "tags": ["Database"],
+        "summary": "Initialize Database",
+        "description": "Clear and add new data to the database",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Seed Succeded"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getRentals": {
+      "get": {
+        "tags": ["Rentals"],
+        "summary": "Get all Rentals",
+        "description": "Return all the rentals of the videoclub",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rentals List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rental"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/getUsers": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get all Users",
+        "description": "Return all the users of the videoclub",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getRental/{idRental}": {
+      "get": {
+        "tags": ["Rentals"],
+        "summary": "Get a Rental",
+        "description": "Return a concrete rental of the videoclub",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idRental",
+            "in": "path",
+            "description": "ID of rental to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rental Data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getRentalsByUser/{idUser}": {
+      "get": {
+        "tags": ["Rentals"],
+        "summary": "Get Rentals by User",
+        "description": "Return all the rentals of a user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idUser",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rentals List",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rental"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newRental": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Create a new Rental",
+        "description": "Return the new Rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RentalDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New Rental",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newBook/{idFilm}": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Create a new Booking for a Film",
+        "description": "Return the new Book",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idFilm",
+            "in": "path",
+            "description": "ID of the Filkm to book",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New Book",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/updateRental/{idRental}": {
+      "put": {
+        "tags": ["Rentals"],
+        "summary": "Update a Rental",
+        "description": "Return the Rental updated",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idRental",
+            "in": "path",
+            "description": "ID of rental to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RentalDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Uptaded Rental",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/returnRental/{idRental}": {
+      "put": {
+        "tags": ["Rentals"],
+        "summary": "Mark a Rental as returned",
+        "description": "Mark the date of return of a rental",
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "idRental",
+            "in": "path",
+            "description": "ID of rental to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rental Marked as Returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter JWT Bearer token **_only_**"
+      },
+      "adminAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter Admin JWT Bearer token with isAdmin:true **_only_**"
+      }
+    },
     "schemas": {
-      "Pelicula": {
+      "Film": {
         "type": "object",
         "properties": {
-          "id_pelicula": {
-            "type": "integer",
-            "example": 1
+          "filmId": {
+            "type": "string",
+            "example": "324dfd2321..."
           },
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -497,36 +1095,37 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "rental_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
-            "example": "Esta película ..."
+            "example": "This film ..."
           }
         }
       },
-      "PeliculaDTO": {
+      "FilmDTO": {
         "type": "object",
         "properties": {
-          "titulo": {
+          "title": {
             "type": "string",
             "example": "El Padrino"
           },
-          "genero": {
+          "genre": {
             "type": "string",
             "example": "Drama"
           },
-          "estreno": {
-            "type": "integer",
-            "example": 1973
+          "release": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
           },
           "director": {
             "type": "string",
             "example": "Russo Brothers"
           },
-          "duracion": {
+          "duration": {
             "type": "integer",
             "example": 120
           },
@@ -534,11 +1133,11 @@
             "type": "integer",
             "example": 12
           },
-          "precio_alquiler": {
+          "rental_price": {
             "type": "integer",
             "example": 20
           },
-          "descripcion": {
+          "description": {
             "type": "string",
             "example": "Esta película ..."
           }
@@ -548,8 +1147,8 @@
         "type": "object",
         "properties": {
           "id_user": {
-            "type": "integer",
-            "example": 1
+            "type": "string",
+            "example": "324dfd2321..."
           },
           "name": {
             "type": "string",
@@ -562,6 +1161,77 @@
           "email": {
             "type": "string",
             "example": "pepe@correo.com"
+          }
+        }
+      },
+      "Rental": {
+        "type": "object",
+        "properties": {
+          "rentalID": {
+            "type": "string",
+            "example": "324dfd2321..."
+          },
+          "userId": {
+            "type": "string",
+            "example": "324dfd2321..."
+          },
+          "userName": {
+            "type": "string",
+            "example": "Francisco Perez"
+          },
+          "filmId": {
+            "type": "string",
+            "example": "324dfd2321..."
+          },
+          "filmName": {
+            "type": "string",
+            "example": "El Padrino"
+          },
+          "price": {
+            "type": "number",
+            "example": "12.99"
+          },
+          "bookDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
+          },
+          "rentalDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
+          },
+          "expedtedReturnDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
+          },
+          "returnDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
+          }
+        }
+      },
+      "RentalDTO": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "324dfd2321..."
+          },
+          "filmId": {
+            "type": "string",
+            "example": "324dfd2321..."
+          },
+          "price": {
+            "type": "number",
+            "example": "12.99"
+          },
+          "bookDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1973-02-12"
           }
         }
       },

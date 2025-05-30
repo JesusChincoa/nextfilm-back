@@ -1,0 +1,10 @@
+{
+    "nombre": "API Rest Express - Películas y usuarios",
+    "configDB": {
+        "HOST": "mongodb://localhost:27017/nextfilm"
+    },
+    "configToken":{
+        "SEED":"clave_secreta",
+        "expiration": "24h"
+    }
+}
