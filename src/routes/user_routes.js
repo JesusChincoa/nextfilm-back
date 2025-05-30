@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Joi = require('@hapi/joi');
 const { verificarTokenAdmin } = require('../middleware/auth');
+const config = require('config');
 
 const schema = Joi.object({
     name: Joi.string().required(),
@@ -43,7 +44,7 @@ ruta.post('/register', async (req, res) =>{
         let usuario = userService.crearUsuario(body);
 
         usuario.then(user =>{
-            const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
+            const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, config.get('configToken.SEED'), {expiresIn: '24h'})
             res.status(201).json({
                 token: token,
                 user:{
@@ -82,7 +83,7 @@ ruta.post('/login', (req, res) => {
             })
         }
 
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, config.get('configToken.SEED'), {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
@@ -109,7 +110,7 @@ ruta.post('/checkStatus', (req, res) => {
                 error: 'Token no activo'
             })
         }
-        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, 'clave_secreta', {expiresIn: '24h'})
+        const token = jwt.sign({_id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin}, config.get('configToken.SEED'), {expiresIn: '24h'})
         res.status(200).json({
             token: token,
             user:{
