@@ -11,7 +11,7 @@ const rute = express.Router();
 
 rute.get("/seed", async (req, res) => {
   try {
-    seedDatabase();
+    await seedDatabase();
 
     res.status(200).json({ message: "Database seeded successfully" });
   } catch (error) {
@@ -26,21 +26,21 @@ async function seedDatabase() {
   // Delete all rentals
   const rentals = await getRentals();
   rentals.forEach(async (rental) => {
-    await delteRental(rental._id);
+    await deleteRental(rental._id);
   });
 
   // Delete all films
-  const films = await filmService.getFilms();
+  const films = await getAllFilms();
 
   films.forEach(async (film) => {
-    await filmService.deleteFromID(film._id);
+    await deleteFilmFromID(film._id);
   });
 
   // Delete all users
   const users = await getUsers();
 
   users.forEach(async (user) => {
-    await deleteFromID(user._id);
+    await deleteUserFromID(user._id);
   });
 
   genres = [
@@ -70,7 +70,8 @@ async function seedDatabase() {
       director: "Director Name",
       duration: 60 + Math.floor(Math.random() * 120), // Random duration between 60 and 180 minutes
       stock: 10 - i,
-      rental_price: 5.99 + Math.floor(Math.random() * 10), 
+      rental_price: 5.99 + Math.floor(Math.random() * 10),
+      isActive: true,
     });
   }
 
@@ -95,7 +96,7 @@ async function seedDatabase() {
   }
 }
 
-async function delteRental(id) {
+async function deleteRental(id) {
   return await Rental.findByIdAndDelete({ _id: id });
 }
 
@@ -103,8 +104,18 @@ async function getRentals() {
   return await Rental.find();
 }
 
-async function deleteFromID(id) {
+async function getAllFilms() {
+  const films = await Film.find()
+  return films;
+  
+}
+
+async function deleteUserFromID(id) {
   return await Usuario.findByIdAndDelete({ _id: id });
+}
+
+async function deleteFilmFromID(id) {
+  return await Film.findByIdAndDelete({ _id: id });
 }
 
 async function getUsers() {
