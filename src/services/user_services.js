@@ -39,7 +39,7 @@ async function obtenerUsuarioPorId(id) {
 async function obtenerUsuarioIdFromToken(token){
     try {
         // Verificar y decodificar el token
-        const decoded = jwt.verify(token, con);
+        const decoded = jwt.verify(token, config.get('configToken.SEED'));
 
         return decoded._id;
     }
