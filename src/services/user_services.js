@@ -2,6 +2,7 @@ const Usuario = require('../models/user_model');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 
 //Crea un nuevo usuario y lo guarda en la base de datos
 async function crearUsuario(body){
@@ -38,7 +39,7 @@ async function obtenerUsuarioPorId(id) {
 async function obtenerUsuarioIdFromToken(token){
     try {
         // Verificar y decodificar el token
-        const decoded = jwt.verify(token, 'clave_secreta');
+        const decoded = jwt.verify(token, con);
 
         return decoded._id;
     }
@@ -53,7 +54,7 @@ async function obtenerUsuarioIdFromToken(token){
 async function encontrarToken(token){
     try {
         // Verificar y decodificar el token
-        const decoded = jwt.verify(token, 'clave_secreta');
+        const decoded = jwt.verify(token, config.get('configToken.SEED'));
 
         // Buscar al usuario por ID
         const usuario = await Usuario.findOne({email: decoded.email})
