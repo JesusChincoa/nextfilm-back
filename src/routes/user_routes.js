@@ -4,6 +4,7 @@ const ruta = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Joi = require('@hapi/joi');
+const { verificarTokenAdmin } = require('../middleware/auth');
 
 const schema = Joi.object({
     name: Joi.string().required(),
@@ -127,7 +128,7 @@ ruta.post('/checkStatus', (req, res) => {
 })
 
 //Endpoint para obtener todos los usuarios
-ruta.get('/getUsers', (req, res) => {
+ruta.get('/getUsers', verificarTokenAdmin ,(req, res) => {
     userService.getUsers().then(users => {
         res.status(200).json(users)
     })

@@ -38,7 +38,11 @@ const mongoose = require('mongoose');
     rental_price:{
         type: Number,
         required: true
-    }
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
 
 });
 module.exports= mongoose.model('Film', filmSchema);

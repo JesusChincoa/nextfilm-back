@@ -1,0 +1,10 @@
+{
+    "nombre": "API Rest Express - Películas y usuarios",
+    "configDB": {
+        "HOST": "mongodb+srv://nextfilmuser:^&CbrWooemeO2002@nextfilmdb.jqsarsh.mongodb.net/?retryWrites=true&w=majority&appName=nextfilmdb"
+    },
+    "configToken":{
+        "SEED":"Rj8#pV7!dK@tN3$wZqL1^sXeFgUo9&BmAyC6+Jh2rT0iMz4vEnPb",
+        "expiration": "24h"
+    }
+}
