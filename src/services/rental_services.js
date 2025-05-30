@@ -45,13 +45,13 @@ async function createRental(body){
 }
 
 //Crea una nueva reserva
-async function createBook(userId, filmId){
+async function createBook(userId, filmId,price ){
     let rental = new Rental({
         userId: userId,
         filmId: filmId,
+        price: price,
         rentalDate: null,
-        expectedReturnDate: null,
-
+        expectedReturnDate: null
     });
     return await rental.save()
 }
