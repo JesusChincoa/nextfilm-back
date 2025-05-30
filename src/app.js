@@ -5,18 +5,25 @@ const seed = require("./routes/seed_route");
 const users = require("./routes/user_routes");
 const alt_films = require("./routes/film_alternative_routes")
 const rentals = require("./routes/rental_routes");
+const morgan = require("morgan");
+const config = require("config");
 
 const cors = require("cors");
 
 
 mongoose
-  .connect("mongodb://localhost:27017/nextfilm")
+  .connect(config.get('configDB.HOST'))
   .then(() => console.log("Connecting to MongoDB"))
   .catch((err) => console.error("error connecting MongoDB", err));
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'))
+    console.log('Morgan está habilitado')
+}
 
 app.use(
   cors()

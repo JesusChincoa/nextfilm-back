@@ -6,7 +6,7 @@ let verificarToken = (req, res, next) =>{
     let token = req.get('Authorization');
     // Elimina el prefijo 'Bearer ' ya que se envia asi desde el frontend
     token = token.replace('Bearer ', '')
-    jwt.verify(token, 'clave_secreta', (err, decoded) =>{
+    jwt.verify(token, config.get(configToken.SEED), (err, decoded) =>{
         if (err){
             return res.status(401).json({err})
         }
@@ -20,7 +20,7 @@ let verificarTokenAdmin = (req, res, next) =>{
     let token = req.get('Authorization')
     // Elimina el prefijo 'Bearer ' ya que se envia asi desde el frontend
     token = token.replace('Bearer ', '')
-    jwt.verify(token, 'clave_secreta', (err, decoded) =>{
+    jwt.verify(token, config.get(configToken.SEED), (err, decoded) =>{
         if (err){
             return res.status(401).json({err})
         }
